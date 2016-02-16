@@ -31,7 +31,9 @@
 
 * The Case tactic
   From Software Foundation, used to keep track of the ongoing case
-** 
+
+**
+#+BEGIN_SRC Coq
    Require String. Open Scope string_scope.
    
    Ltac move_to_top x :=
@@ -58,16 +60,32 @@
   Tactic Notation "SSSSSCase" constr(name) := Case_aux SSSSSCase name.
   Tactic Notation "SSSSSSCase" constr(name) := Case_aux SSSSSSCase name.
   Tactic Notation "SSSSSSSCase" constr(name) := Case_aux SSSSSSSCase name.
-
+#+END_SRC
 
 * Arguments
 ** Implicit arguments
   Implicit arguments are treated the same way as if provided as an _, but systematically.
   We can declare them at define time by putting curly brackets around the argument.
-  Afterwards, through the Arguments directive: name and list of arguments, curly brackets for the ones to be inferred.
+  
+  #+BEGIN_SRC Coq
+    Inductive list {A : Type} : Type :=
+     | nil : list 
+     | cons : A -> list -> list.           
+  #+END_SRC
+
+  Afterwards, through the Arguments directive: name and list of arguments, curly
+  brackets for the ones to be inferred.
+
   Use an @ to disable implicit arguments locally.
+
+  #+BEGIN_SRC Coq
+   Definition l : @list nat := ... .
+  #+END_SRC
+  
+
 ** Arguments renaming
-Arguments can be used to rename arguments using the rename flage (:rename. at the end of the command).
+Arguments can be used to rename arguments using the rename flag (:rename. at the end of the command).
+(PW: explain? example?)
 
 
 * Generalize dependent versus generalize versus revert
@@ -126,10 +144,15 @@ This situation is solved using generalize dependent.
 
 * Duplicating an hypothesis
 ** With remember
+#+BEGIN_SRC Coq
    Ltac dup H := 
    let H' := fresh "H" in 
    remember H as H'; clear HeqH'.
+#+END_SRC
+
 ** With generalize dependent
+#+BEGIN_SRC Coq
    Ltac dup H :=
    let H' := fresh "H" in
    generalize dependent H; intros H'.
+#+END_SRC
