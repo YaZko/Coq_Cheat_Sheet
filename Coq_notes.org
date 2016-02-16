@@ -73,49 +73,56 @@ Arguments can be used to rename arguments using the rename flage (:rename. at th
 * Generalize dependent versus generalize versus revert
 
 Starting from a goal
+#+BEGIN_SRC Coq
   a, b : A
   EQ : a = b
   ---------
     b = a
+#+END_SRC
 
 One can use different tactics to move hypotheses from the context to the goal.
 
+#+BEGIN_SRC Coq
   revert EQ
 
   a, b : A
   ---------
   a = b -> b = a
 
+#+END_SRC
 OR
-
+#+BEGIN_SRC Coq
   generalize EQ 
 
   a, b : A
   EQ : a = b
   ---------
   a = b -> b = a
+#+END_SRC
 
 Notice that the generalized hypothesis is still present in the context, contrary to the reverted one.
 
 We can also generalize terms of type in Type.
 
+#+BEGIN_SRC Coq
   generalize a
 
   a, b : A
   EQ : a = b
   ---------
   forall a0: A, b = a0
+#+END_SRC
 
 Here we have lost some information, because the a in the context is no longer related to the new one.
 This situation is solved using generalize dependent.
 
-
+#+BEGIN_SRC Coq
   generalize dependent a
 
   b : A
   ---------
   forall a : A, a = b -> b = a
-
+#+END_SRC
 
 * Duplicating an hypothesis
 ** With remember
