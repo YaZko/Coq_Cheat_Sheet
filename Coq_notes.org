@@ -159,7 +159,8 @@ This situation is solved using generalize dependent.
 
 * Working with Ltac
 
-** Finding an hypothesis
+** Matching on hypotheses and conclusions
+*** Hypotheses
 Looking for an hypothesis of the form P x y, for any x and y.
 
 #+BEGIN_SRC Coq
@@ -172,7 +173,7 @@ You can add ~try~ in front of it.
 
 To match *all* such hypotheses, add ~repeat~.
 
-#+BEGIN_EXAMPLE
+
 The following example shows how to use hypotheses matching to remove duplicates in hypotheses.
 
 #+BEGIN_SRC Coq
@@ -191,5 +192,45 @@ We try to match two hypotheses of the form P ?x ?y. The pattern matching is
  strong enough to express that H1 and H2 must refer to the same x and y.
 H1 and H2 are guaranteed to be different though.
 
-#+END_EXAMPLE
+It is also possible to match part of an hypothesis.
+Using ~context~:
+#+BEGIN_SRC Coq
+match goal with
+  H : context [P ?x ?y] |- _ => (* do stuff *)
+end.
+#+END_SRC
 
+*** Conclusions
+
+The matching can also be made on the conlusion of the goal (after ~|-~):
+#+BEGIN_SRC Coq
+match goal with
+  |- context [P ?x ?y] => (* do stuff *)
+end.
+#+END_SRC
+
+Of course, multiple patterns can be matched.
+#+BEGIN_SRC Coq
+repeat match goal with
+  H : context [P ?x ?y] |- _ => (* do stuff *)
+| |- context [P ?x ?y] => (* do stuff *)
+end.
+#+END_SRC
+This will loop as long as either the hypotheses or the conclusion contain a term matching ~P ?x ?y~.
+Be sure to remove the matching hypotheses to enforce termination.
+
+
+
+** Generate fresh names
+Sometimes we need to generate fresh names inside tactics (see [Duplicating an hypothesis])
+#+BEGIN_SRC Coq
+  let n := fresh in (* generate new name, probably H0, H1, H2 *)
+  intro n
+
+  let n := fresh H in (* generate new name, based on the name of H *)
+  intro n
+
+  let n := fresh "H" in (* generate new name, based on the given string "H" *)
+  intro n
+
+#+END_SRC
