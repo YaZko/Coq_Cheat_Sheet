@@ -234,3 +234,32 @@ Sometimes we need to generate fresh names inside tactics (see [Duplicating an hy
   intro n
 
 #+END_SRC
+
+** Print Ltac
+One can view the Ltac code of a tactic (when it's actually written in Ltac).
+#+BEGIN_SRC Coq
+  Print Ltac inv.
+
+  --->
+  Ltac inv H := inversion H; clear H; subst
+#+END_SRC
+
+** Working with PG
+
+One can add custom keybindings to Emacs / PG.
+For example, to see the Ltac code of a tactic (see previous section), we can define the following Emacs lisp code in the appropriate file (~/.emacs= in my case)
+
+#+BEGIN_SRC elisp
+
+(defun coq-Print-Ltac (withprintingall)
+  "Ask for a tactic and Print Ltac it."
+  (interactive "P")
+  (if withprintingall
+      (coq-ask-do-show-all "Print Ltac" "Print Ltac")
+    (coq-ask-do "Print Ltac" "Print Ltac")))
+
+(global-set-key (kbd "C-c C-$") 'coq-Print-Ltac)
+
+#+END_SRC
+
+(PW: I should investigate what occurences of "Print Ltac" stand for what)
