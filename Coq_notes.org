@@ -142,6 +142,7 @@ This situation is solved using generalize dependent.
   forall a : A, a = b -> b = a
 #+END_SRC
 
+
 * Duplicating an hypothesis
 ** With remember
 #+BEGIN_SRC Coq
@@ -156,7 +157,7 @@ This situation is solved using generalize dependent.
    let H' := fresh "H" in
    generalize dependent H; intros H'.
 #+END_SRC
-
+   
 * Working with Ltac
 
 ** Matching on hypotheses and conclusions
@@ -222,7 +223,7 @@ Be sure to remove the matching hypotheses to enforce termination.
 
 
 ** Generate fresh names
-Sometimes we need to generate fresh names inside tactics (see [Duplicating an hypothesis])
+Sometimes we need to generate fresh names inside tactics (see [[Duplicating an hypothesis]])
 #+BEGIN_SRC Coq
   let n := fresh in (* generate new name, probably H0, H1, H2 *)
   intro n
