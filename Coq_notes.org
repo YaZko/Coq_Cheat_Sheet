@@ -156,3 +156,40 @@ This situation is solved using generalize dependent.
    let H' := fresh "H" in
    generalize dependent H; intros H'.
 #+END_SRC
+
+* Working with Ltac
+
+** Finding an hypothesis
+Looking for an hypothesis of the form P x y, for any x and y.
+
+#+BEGIN_SRC Coq
+  match goal with
+    H : P ?x ?y |- _ => destruct H; auto
+  end.
+#+END_SRC
+This will fail if no such hypothesis exists.
+You can add ~try~ in front of it.
+
+To match *all* such hypotheses, add ~repeat~.
+
+#+BEGIN_EXAMPLE
+The following example shows how to use hypotheses matching to remove duplicates in hypotheses.
+
+#+BEGIN_SRC Coq
+  Goal P x y -> P x y -> P x z -> P x z -> P x z -> P y z.
+  Proof.
+    intros.
+
+    repeat match goal with
+      H1 : P ?x ?y,
+          H2: P ?x ?y |- _ => clear H1
+    end.
+  Qed.
+#+END_SRC
+
+We try to match two hypotheses of the form P ?x ?y. The pattern matching is
+ strong enough to express that H1 and H2 must refer to the same x and y.
+H1 and H2 are guaranteed to be different though.
+
+#+END_EXAMPLE
+
