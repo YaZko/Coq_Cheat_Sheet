@@ -144,8 +144,6 @@ This situation is solved using generalize dependent.
 #+END_SRC
 
 
-#+CUSTOM_ID dup
-
 * Duplicating an hypothesis
 ** With remember
 #+BEGIN_SRC coq
@@ -227,7 +225,8 @@ Be sure to remove the matching hypotheses to enforce termination.
 
 
 ** Generate fresh names
-Sometimes we need to generate fresh names inside tactics (see [[#dup]])
+
+Sometimes we need to generate fresh names inside tactics:
 #+BEGIN_SRC coq
   let n := fresh in (* generate new name, probably H0, H1, H2 *)
   intro n
