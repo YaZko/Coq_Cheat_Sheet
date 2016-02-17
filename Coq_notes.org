@@ -62,6 +62,7 @@
   Tactic Notation "SSSSSSSCase" constr(name) := Case_aux SSSSSSSCase name.
 #+END_SRC
 
+
 * Arguments
 ** Implicit arguments
   Implicit arguments are treated the same way as if provided as an _, but systematically.
@@ -143,8 +144,8 @@ This situation is solved using generalize dependent.
 #+END_SRC
 
 
-* Duplicating an hypothesis
 #+CUSTOM_ID dup
+* Duplicating an hypothesis
 ** With remember
 #+BEGIN_SRC Coq
    Ltac dup H := 
@@ -159,6 +160,7 @@ This situation is solved using generalize dependent.
    generalize dependent H; intros H'.
 #+END_SRC
    
+
 * Working with Ltac
 
 ** Matching on hypotheses and conclusions
@@ -265,3 +267,11 @@ For example, to see the Ltac code of a tactic (see previous section), we can def
 #+END_SRC
 
 (PW: I should investigate what occurences of "Print Ltac" stand for what)
+
+* Show the axioms used for a given lemma
+
+To show what axioms a given lemma depends on, one can use the following vernacular command
+
+#+BEGIN_SRC Coq
+Print Assumptions my_lemma.
+#+END_SRC
