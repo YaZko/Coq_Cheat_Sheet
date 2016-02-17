@@ -328,12 +328,15 @@ To show what axioms a given lemma depends on, one can use the following vernacul
 
 # Using tactics like reflexivity over user built relations<a id="orgheadline32"></a>
 
-The goal here is to be able to use Coq's built-in tactics over other relations than iff and eq, in particular relations that you have defined yourself.
+The goal here is to be able to use Coq's built-in tactics over other relations
+than iff and eq, in particular relations that you have defined yourself.
 
 ## Adding equivalence relations, preorder, etc&#x2026;<a id="orgheadline30"></a>
 
-The inner mechanism going on when using tactics like reflexivity, transitivity or symmetry are typeclasses. However Coq allows a particular facilities to declare new relations without digging into this.
-The syntax goes roughly as follows:
+The inner mechanism going on when using tactics like reflexivity,
+transitivity or symmetry is typeclasses. However Coq allows a particular
+facility to declare new relation without digging into this.  The syntax goes
+roughly as follows:
 
     Add Parametric Relation (A: Type): A (@R A)
     reflexivity proved by ...
@@ -341,8 +344,11 @@ The syntax goes roughly as follows:
     transitivity proved by ...
     as R_is_an_equivalence_relation.
 
-Note that you naturally only want to take A as a parameter if your relation is indeed polymorphic.
-For instance, suppose you need to manipulate predicates over program states up to propositional extentionnal equivalence. This relation is an equivalence relation, so you might want to declare is as so.
+Note that you naturally only want to take A as a parameter if your relation
+is indeed polymorphic.  For instance, suppose you need to manipulate
+predicates over program states up to propositional extentionnal
+equivalence. This relation is an equivalence relation, so you might want to
+declare is as so.
 
     Axiom state: Type.
     Definition Pred: state -> Prop.
@@ -368,9 +374,11 @@ For instance, suppose you need to manipulate predicates over program states up t
         transitivity proved by PEq_trans
           as PEq_equiv.
 
-We now are able to prove goals such that (forall P: Pred, PEq P P) with a simpl (intros P; reflexivity). Same goes for transitivity and symmetry.
+We now are able to prove goals such that (forall P: Pred, PEq P P) with a
+simpl (`intros P; reflexivity`). Same goes for `transitivity` and `symmetry`.
 
-Note that we can also only declare some of those properties, declaring that a relation is a preorder for instance:
+Note that we can also only declare some of those properties, declaring that a
+relation is a preorder for instance:
 
     Definition PWeaker (P1 P2: Pred): Prop := forall s, P2 s -> P1 s.
     
@@ -389,10 +397,15 @@ Note that we can also only declare some of those properties, declaring that a re
         transitivity proved by PWeaker_trans
           as PWeaker_preorder.
 
-In this case naturally symmetry will not work.
-Note that you are not obligated to provide directly the appropriate proof term in the relation declaration, you may use wildcards for Coq to ask you the proofs interactively.
+In this case naturally `symmetry` will not work.  Note that you are not
+required to provide the appropriate proof term directly in the relation
+declaration, you may use wildcards for Coq to require the proofs
+interactively.
 
-Remark: As said earlier, what is really going on is the typeclass mechanism. So all this is simply sugar for an instance declaration to the appropriate type class, Equivalence for instance in the first case. We could have written instead:
+Remark: As said earlier, what is really going on is the typeclass
+mechanism. So all this is simply sugar for an instance declaration to the
+appropriate type class, Equivalence for example in the first case. We could
+have written instead:
 
     Require Import Classes.RelationClasses.
     
@@ -403,15 +416,21 @@ Remark: As said earlier, what is really going on is the typeclass mechanism. So 
 
 ## Adding morphisms<a id="orgheadline31"></a>
 
-The other typical case in which one you might want to extend in built tactics is the one of morphisms for which we would like to be able to use rewrite. Once again, we have syntactic sugar to avoir bothering explicitely with typeclasses.
-In the case of a binary function, it would look like this:
+The other typical case in which you might want to extend built-in tactics is
+the one of morphisms for which we would like to be able to use
+`rewrite`. Once again, we have syntactic sugar to avoir bothering explicitely
+with typeclasses.  In the case of a binary function, it would look like this:
 
     Add Parametric Morphism : f with
        signature (rel ==> rel ==> rel) as foo.
 
-This one might seem a bit more cryptic. What is going on is that given a context, we want to be able to substitute a subterm for an other one given they are related by the relation rel. Said differently, want to prove that f is a morphism with respect to rel, or that rel is compatible with f.
+This one might seem a bit more cryptic. What is going on is that given a
+context, we want to be able to substitute a subterm for an other one given
+they are related by the relation rel. Said differently, we want to prove that
+f is a morphism with respect to rel, or that rel is compatible with f.
 
-It is clearer with an example. Say we define the union of two predicates, we can actually rewrite any equivalent predicates under it.
+It is clearer with an example. Say we define the union of two predicates, we
+can actually rewrite any equivalent predicates under it.
 
     Require Import Setoid.
     Definition PJoin P1 P2: Pred := λ s, P1 s \/ P2 s.
@@ -423,11 +442,26 @@ It is clearer with an example. Say we define the union of two predicates, we can
         (destruct H; [left; apply eq1; assumption | right; apply eq2; assumption]).
     Qed.
 
-Coq asked us to prove that if four predicates are PEquivalent by pairs, their respective unions are PEquivalents. We therefore now are able to use the tactic rewrite to rewrite PEquivalences under unions in goals.
-Note: beware, we only proved the compatibility of PEq with respect to the union! Coq will complain if we try to rewrite PEquivalence under any other construction. The (Leibniz) equality has the peculiar property to be compatible with any context by definition.
-Note bis: we have a very symmetric statement in the exemple using PEq everywhere, but that is not necessary. We could for instance assert compatibility only on the left by replacing the second PEq by an eq. An other reason of uniformity in the example is that the codomain of the function PJoin is the same as its arguments, but once again it could be otherwise. It notably is common to end up in Prop and therefore be interested in a result where the last PEq is replaced by iff: the proposition obtain after rewriting is guaranteed to be equivalent.
+Coq asked us to prove that if four predicates are pairwise PEquivalent, their
+respective unions are PEquivalent. We therefore now are able to use the
+tactic `rewrite` to rewrite PEquivalences under unions in goals.
 
-Finally, as was the case with relations, we can instead explicitely declare the adequate instance. The Typeclass at use here is Proper:
+Note: beware, we only proved the compatibility of PEq with respect to the
+union!  Coq will complain if we try to rewrite PEquivalence under any other
+construction. The (Leibniz) equality has the peculiar property to be
+compatible with any context by definition.  
+
+Note bis: we have a very symmetric statement in the exemple using PEq
+everywhere, but that is not necessary. We could for instance assert
+compatibility only on the left by replacing the second PEq by an eq. An other
+reason of uniformity in the example is that the codomain of the function
+PJoin is the same as its arguments, but once again it could be otherwise. It
+notably is common to end up in Prop and therefore be interested in a result
+where the last PEq is replaced by iff: the proposition obtained after
+rewriting is guaranteed to be equivalent.
+
+Finally, as was the case with relations, we can instead explicitely declare
+the adequate instance. The Typeclass at use here is Proper:
 
     Instance foo: Proper (PEq ==> PEq ==> PEq) PJoin.
     Proof.
