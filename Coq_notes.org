@@ -32,7 +32,6 @@
 * The Case tactic
   From Software Foundation, used to keep track of the ongoing case
 
-**
 #+BEGIN_SRC coq
    Require String. Open Scope string_scope.
    
@@ -159,6 +158,12 @@ This situation is solved using generalize dependent.
    generalize dependent H; intros H'.
 #+END_SRC
    
+** With assert
+#+BEGIN_SRC coq
+Ltac dup H :=
+let n := fresh H in
+assert (n := H)
+#+END_SRC
 
 * Working with Ltac
 

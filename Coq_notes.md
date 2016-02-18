@@ -35,30 +35,31 @@
 </ul>
 </li>
 <li><a href="#orgheadline18">6. Generalize dependent versus generalize versus revert</a></li>
-<li><a href="#orgheadline21">7. Duplicating an hypothesis</a>
+<li><a href="#orgheadline22">7. Duplicating an hypothesis</a>
 <ul>
 <li><a href="#orgheadline19">7.1. With remember</a></li>
 <li><a href="#orgheadline20">7.2. With generalize dependent</a></li>
+<li><a href="#orgheadline21">7.3. With assert</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline28">8. Working with Ltac</a>
+<li><a href="#orgheadline29">8. Working with Ltac</a>
 <ul>
-<li><a href="#orgheadline24">8.1. Matching on hypotheses and conclusions</a>
+<li><a href="#orgheadline25">8.1. Matching on hypotheses and conclusions</a>
 <ul>
-<li><a href="#orgheadline22">8.1.1. Hypotheses</a></li>
-<li><a href="#orgheadline23">8.1.2. Conclusions</a></li>
+<li><a href="#orgheadline23">8.1.1. Hypotheses</a></li>
+<li><a href="#orgheadline24">8.1.2. Conclusions</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline25">8.2. Generate fresh names</a></li>
-<li><a href="#orgheadline26">8.3. Print Ltac</a></li>
-<li><a href="#orgheadline27">8.4. Working with PG</a></li>
+<li><a href="#orgheadline26">8.2. Generate fresh names</a></li>
+<li><a href="#orgheadline27">8.3. Print Ltac</a></li>
+<li><a href="#orgheadline28">8.4. Working with PG</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline29">9. Show the axioms used for a given lemma</a></li>
-<li><a href="#orgheadline32">10. Using tactics like reflexivity over user built relations</a>
+<li><a href="#orgheadline30">9. Show the axioms used for a given lemma</a></li>
+<li><a href="#orgheadline33">10. Using tactics like reflexivity over user built relations</a>
 <ul>
-<li><a href="#orgheadline30">10.1. Adding equivalence relations, preorder, etc&#x2026;</a></li>
-<li><a href="#orgheadline31">10.2. Adding morphisms</a></li>
+<li><a href="#orgheadline31">10.1. Adding equivalence relations, preorder, etc&#x2026;</a></li>
+<li><a href="#orgheadline32">10.2. Adding morphisms</a></li>
 </ul>
 </li>
 </ul>
@@ -111,8 +112,6 @@ Right associativity
 # The Case tactic<a id="orgheadline14"></a>
 
 From Software Foundation, used to keep track of the ongoing case
-
-\*\*
 
      Require String. Open Scope string_scope.
     
@@ -210,7 +209,7 @@ This situation is solved using generalize dependent.
     ---------
     forall a : A, a = b -> b = a
 
-# Duplicating an hypothesis<a id="orgheadline21"></a>
+# Duplicating an hypothesis<a id="orgheadline22"></a>
 
 ## With remember<a id="orgheadline19"></a>
 
@@ -224,11 +223,17 @@ This situation is solved using generalize dependent.
     let H' := fresh "H" in
     generalize dependent H; intros H'.
 
-# Working with Ltac<a id="orgheadline28"></a>
+## With assert<a id="orgheadline21"></a>
 
-## Matching on hypotheses and conclusions<a id="orgheadline24"></a>
+    Ltac dup H :=
+    let n := fresh H in
+    assert (n := H)
 
-### Hypotheses<a id="orgheadline22"></a>
+# Working with Ltac<a id="orgheadline29"></a>
+
+## Matching on hypotheses and conclusions<a id="orgheadline25"></a>
+
+### Hypotheses<a id="orgheadline23"></a>
 
 Looking for an hypothesis of the form P x y, for any x and y.
 
@@ -264,7 +269,7 @@ Using `context`:
       H : context [P ?x ?y] |- _ => (* do stuff *)
     end.
 
-### Conclusions<a id="orgheadline23"></a>
+### Conclusions<a id="orgheadline24"></a>
 
 The matching can also be made on the conlusion of the goal (after `|-`):
 
@@ -282,9 +287,9 @@ Of course, multiple patterns can be matched.
 This will loop as long as either the hypotheses or the conclusion contain a term matching `P ?x ?y`.
 Be sure to remove the matching hypotheses to enforce termination.
 
-## Generate fresh names<a id="orgheadline25"></a>
+## Generate fresh names<a id="orgheadline26"></a>
 
-Sometimes we need to generate fresh names inside tactics 
+Sometimes we need to generate fresh names inside tactics:
 
     let n := fresh in (* generate new name, probably H0, H1, H2 *)
     intro n
@@ -295,7 +300,7 @@ Sometimes we need to generate fresh names inside tactics
     let n := fresh "H" in (* generate new name, based on the given string "H" *)
     intro n
 
-## Print Ltac<a id="orgheadline26"></a>
+## Print Ltac<a id="orgheadline27"></a>
 
 One can view the Ltac code of a tactic (when it's actually written in Ltac).
 
@@ -304,7 +309,7 @@ One can view the Ltac code of a tactic (when it's actually written in Ltac).
     --->
     Ltac inv H := inversion H; clear H; subst
 
-## Working with PG<a id="orgheadline27"></a>
+## Working with PG<a id="orgheadline28"></a>
 
 One can add custom keybindings to Emacs / PG.
 For example, to see the Ltac code of a tactic (see previous section), we can define the following Emacs lisp code in the appropriate file (~/.emacs= in my case)
@@ -320,18 +325,18 @@ For example, to see the Ltac code of a tactic (see previous section), we can def
 
 (PW: I should investigate what occurences of "Print Ltac" stand for what)
 
-# Show the axioms used for a given lemma<a id="orgheadline29"></a>
+# Show the axioms used for a given lemma<a id="orgheadline30"></a>
 
 To show what axioms a given lemma depends on, one can use the following vernacular command
 
     Print Assumptions my_lemma.
 
-# Using tactics like reflexivity over user built relations<a id="orgheadline32"></a>
+# Using tactics like reflexivity over user built relations<a id="orgheadline33"></a>
 
 The goal here is to be able to use Coq's built-in tactics over other relations
 than iff and eq, in particular relations that you have defined yourself.
 
-## Adding equivalence relations, preorder, etc&#x2026;<a id="orgheadline30"></a>
+## Adding equivalence relations, preorder, etc&#x2026;<a id="orgheadline31"></a>
 
 The inner mechanism going on when using tactics like reflexivity,
 transitivity or symmetry is typeclasses. However Coq allows a particular
@@ -414,7 +419,7 @@ have written instead:
      Equivalence_Symmetric := PEq_symm
      Equivalence_Transitive := PEq_trans.
 
-## Adding morphisms<a id="orgheadline31"></a>
+## Adding morphisms<a id="orgheadline32"></a>
 
 The other typical case in which you might want to extend built-in tactics is
 the one of morphisms for which we would like to be able to use
