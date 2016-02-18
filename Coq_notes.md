@@ -80,20 +80,20 @@
 
 ## Reflexivity<a id="orgheadline6"></a>
 
-Reflexivity does more than simpl, it notably tries to unfold definitions. 
+Reflexivity does more than simpl, it notably tries to unfold definitions.
 
 # Intro patterns<a id="orgheadline10"></a>
 
 ## With square brackets<a id="orgheadline8"></a>
 
 Conjunction: just a list with no separators
-Ex: [H1 [H2 H3]] or (H1 & H2 & H3)
-Disjunction: |
-Ex: [H1 | H2]
+Ex: `[H1 [H2 H3]]` or `(H1 & H2 & H3)`
+Disjunction: `|`
+Ex: `[H1 | H2]`
 
 ## Tricks<a id="orgheadline9"></a>
 
-<- or -> to rewrite directly an equality. 
+<- or -> to rewrite directly an equality.
 \_ clear the hypothesis directly
 ? to let Coq choose the name
 
@@ -113,10 +113,10 @@ Right associativity
 
 From Software Foundation, used to keep track of the ongoing case
 
-     Require String. Open Scope string_scope.
+    Require String. Open Scope string_scope.
     
-     Ltac move_to_top x :=
-     match reverse goal with
+    Ltac move_to_top x :=
+    match reverse goal with
     | H : _ | - _ => try move x after H |
     end.
     
@@ -148,7 +148,7 @@ Implicit arguments are treated the same way as if provided as an \_, but systema
 We can declare them at define time by putting curly brackets around the argument.
 
     Inductive list {A : Type} : Type :=
-     | nil : list 
+     | nil : list
      | cons : A -> list -> list.
 
 Afterwards, through the Arguments directive: name and list of arguments, curly
@@ -182,7 +182,7 @@ One can use different tactics to move hypotheses from the context to the goal.
 
 OR
 
-    generalize EQ 
+    generalize EQ
     
     a, b : A
     EQ : a = b
@@ -200,7 +200,7 @@ We can also generalize terms of type in Type.
     ---------
     forall a0: A, b = a0
 
-Here we have lost some information, because the a in the context is no longer related to the new one.
+Here we have lost some information, because the `a` in the context is no longer related to the new one.
 This situation is solved using generalize dependent.
 
     generalize dependent a
@@ -213,8 +213,8 @@ This situation is solved using generalize dependent.
 
 ## With remember<a id="orgheadline19"></a>
 
-    Ltac dup H := 
-    let H' := fresh "H" in 
+    Ltac dup H :=
+    let H' := fresh "H" in
     remember H as H'; clear HeqH'.
 
 ## With generalize dependent<a id="orgheadline20"></a>
@@ -258,7 +258,7 @@ The following example shows how to use hypotheses matching to remove duplicates 
       end.
     Qed.
 
-We try to match two hypotheses of the form P ?x ?y. The pattern matching is
+We try to match two hypotheses of the form `P ?x ?y`. The pattern matching is
  strong enough to express that H1 and H2 must refer to the same x and y.
 H1 and H2 are guaranteed to be different though.
 
@@ -314,14 +314,14 @@ One can view the Ltac code of a tactic (when it's actually written in Ltac).
 One can add custom keybindings to Emacs / PG.
 For example, to see the Ltac code of a tactic (see previous section), we can define the following Emacs lisp code in the appropriate file (~/.emacs= in my case)
 
-    (defun coq-Print-Ltac (withprintingall)
+    (defun Coq-Print-Ltac (withprintingall)
       "Ask for a tactic and Print Ltac it."
       (interactive "P")
       (if withprintingall
-          (coq-ask-do-show-all "Print Ltac" "Print Ltac")
-        (coq-ask-do "Print Ltac" "Print Ltac")))
+          (Coq-ask-do-show-all "Print Ltac" "Print Ltac")
+        (Coq-ask-do "Print Ltac" "Print Ltac")))
     
-    (global-set-key (kbd "C-c C-$") 'coq-Print-Ltac)
+    (global-set-key (kbd "C-c C-$") 'Coq-Print-Ltac)
 
 (PW: I should investigate what occurences of "Print Ltac" stand for what)
 
@@ -351,9 +351,9 @@ roughly as follows:
 
 Note that you naturally only want to take A as a parameter if your relation
 is indeed polymorphic.  For instance, suppose you need to manipulate
-predicates over program states up to propositional extentionnal
+predicates over program states up to propositional extentional
 equivalence. This relation is an equivalence relation, so you might want to
-declare is as so.
+declare it as so.
 
     Axiom state: Type.
     Definition Pred: state -> Prop.
@@ -366,7 +366,7 @@ declare is as so.
     Lemma PEq_trans: forall P1 P2 P3 (H1: P1 ≡ P2) (H2: P2 ≡ P3),
         P1 ≡ P3.
       intros P1 P2 P3 H1 H2 s; split; intros H3; [apply H2, H1 | apply H1,H2]; assumption.
-    Qed. 
+    Qed.
     
     Lemma PEq_symm: forall P1 P2 (H: P1 ≡ P2), P2 ≡ P1.
     Proof.
@@ -379,7 +379,7 @@ declare is as so.
         transitivity proved by PEq_trans
           as PEq_equiv.
 
-We now are able to prove goals such that (forall P: Pred, PEq P P) with a
+We now are able to prove goals such that `(forall P: Pred, PEq P P)` with a
 simpl (`intros P; reflexivity`). Same goes for `transitivity` and `symmetry`.
 
 Note that we can also only declare some of those properties, declaring that a

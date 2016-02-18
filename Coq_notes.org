@@ -32,7 +32,7 @@
 * The Case tactic
   From Software Foundation, used to keep track of the ongoing case
 
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
   Require String. Open Scope string_scope.
 
   Ltac move_to_top x :=
@@ -67,7 +67,7 @@
   Implicit arguments are treated the same way as if provided as an _, but systematically.
   We can declare them at define time by putting curly brackets around the argument.
 
-  #+BEGIN_SRC coq
+  #+BEGIN_SRC Coq
     Inductive list {A : Type} : Type :=
      | nil : list
      | cons : A -> list -> list.
@@ -78,7 +78,7 @@
 
   Use an @ to disable implicit arguments locally.
 
-  #+BEGIN_SRC coq
+  #+BEGIN_SRC Coq
    Definition l : @list nat := ... .
   #+END_SRC
 
@@ -91,7 +91,7 @@ Arguments can be used to rename arguments using the rename flag (:rename. at the
 * Generalize dependent versus generalize versus revert
 
 Starting from a goal
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
   a, b : A
   EQ : a = b
   ---------
@@ -100,7 +100,7 @@ Starting from a goal
 
 One can use different tactics to move hypotheses from the context to the goal.
 
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
   revert EQ
 
   a, b : A
@@ -109,7 +109,7 @@ One can use different tactics to move hypotheses from the context to the goal.
 
 #+END_SRC
 OR
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
   generalize EQ
 
   a, b : A
@@ -122,7 +122,7 @@ Notice that the generalized hypothesis is still present in the context, contrary
 
 We can also generalize terms of type in Type.
 
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
   generalize a
 
   a, b : A
@@ -134,7 +134,7 @@ We can also generalize terms of type in Type.
 Here we have lost some information, because the ~a~ in the context is no longer related to the new one.
 This situation is solved using generalize dependent.
 
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
   generalize dependent a
 
   b : A
@@ -145,21 +145,21 @@ This situation is solved using generalize dependent.
 
 * Duplicating an hypothesis
 ** With remember
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
    Ltac dup H :=
    let H' := fresh "H" in
    remember H as H'; clear HeqH'.
 #+END_SRC
 
 ** With generalize dependent
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
    Ltac dup H :=
    let H' := fresh "H" in
    generalize dependent H; intros H'.
 #+END_SRC
    
 ** With assert
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
 Ltac dup H :=
 let n := fresh H in
 assert (n := H)
@@ -172,7 +172,7 @@ assert (n := H)
 *** Hypotheses
 Looking for an hypothesis of the form P x y, for any x and y.
 
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
   match goal with
     H : P ?x ?y |- _ => destruct H; auto
   end.
@@ -184,7 +184,7 @@ To match *all* such hypotheses, add ~repeat~.
 
 The following example shows how to use hypotheses matching to remove duplicates in hypotheses.
 
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
   Goal P x y -> P x y -> P x z -> P x z -> P x z -> P y z.
   Proof.
     intros.
@@ -202,7 +202,7 @@ H1 and H2 are guaranteed to be different though.
 
 It is also possible to match part of an hypothesis.
 Using ~context~:
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
 match goal with
   H : context [P ?x ?y] |- _ => (* do stuff *)
 end.
@@ -211,14 +211,14 @@ end.
 *** Conclusions
 
 The matching can also be made on the conlusion of the goal (after ~|-~):
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
 match goal with
   |- context [P ?x ?y] => (* do stuff *)
 end.
 #+END_SRC
 
 Of course, multiple patterns can be matched.
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
 repeat match goal with
   H : context [P ?x ?y] |- _ => (* do stuff *)
 | |- context [P ?x ?y] => (* do stuff *)
@@ -232,7 +232,7 @@ Be sure to remove the matching hypotheses to enforce termination.
 ** Generate fresh names
 
 Sometimes we need to generate fresh names inside tactics:
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
   let n := fresh in (* generate new name, probably H0, H1, H2 *)
   intro n
 
@@ -246,7 +246,7 @@ Sometimes we need to generate fresh names inside tactics:
 
 ** Print Ltac
 One can view the Ltac code of a tactic (when it's actually written in Ltac).
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
   Print Ltac inv.
 
   --->
@@ -260,14 +260,14 @@ For example, to see the Ltac code of a tactic (see previous section), we can def
 
 #+BEGIN_SRC elisp
 
-(defun coq-Print-Ltac (withprintingall)
+(defun Coq-Print-Ltac (withprintingall)
   "Ask for a tactic and Print Ltac it."
   (interactive "P")
   (if withprintingall
-      (coq-ask-do-show-all "Print Ltac" "Print Ltac")
-    (coq-ask-do "Print Ltac" "Print Ltac")))
+      (Coq-ask-do-show-all "Print Ltac" "Print Ltac")
+    (Coq-ask-do "Print Ltac" "Print Ltac")))
 
-(global-set-key (kbd "C-c C-$") 'coq-Print-Ltac)
+(global-set-key (kbd "C-c C-$") 'Coq-Print-Ltac)
 
 #+END_SRC
 
@@ -278,7 +278,7 @@ For example, to see the Ltac code of a tactic (see previous section), we can def
 
 To show what axioms a given lemma depends on, one can use the following vernacular command
 
-#+BEGIN_SRC coq
+#+BEGIN_SRC Coq
 Print Assumptions my_lemma.
 #+END_SRC
 
@@ -292,7 +292,7 @@ Print Assumptions my_lemma.
    facility to declare new relation without digging into this.  The syntax goes
    roughly as follows:
 
-   #+BEGIN_SRC coq
+   #+BEGIN_SRC Coq
    Add Parametric Relation (A: Type): A (@R A)
    reflexivity proved by ...
    symmetry proved by ...
@@ -306,7 +306,7 @@ Print Assumptions my_lemma.
    equivalence. This relation is an equivalence relation, so you might want to
    declare it as so.
 
-   #+BEGIN_SRC coq
+   #+BEGIN_SRC Coq
    Axiom state: Type.
    Definition Pred: state -> Prop.
    Definition PEq (P1 P2: Pred): Prop := forall x, P1 x <-> P2 x.
@@ -339,7 +339,7 @@ Print Assumptions my_lemma.
    Note that we can also only declare some of those properties, declaring that a
    relation is a preorder for instance:
 
-   #+BEGIN_SRC coq
+   #+BEGIN_SRC Coq
    Definition PWeaker (P1 P2: Pred): Prop := forall s, P2 s -> P1 s.
 
    Lemma PWeaker_reflexive: forall P, P ⊆ P.
@@ -368,7 +368,7 @@ Print Assumptions my_lemma.
    appropriate type class, Equivalence for example in the first case. We could
    have written instead:
 
-   #+BEGIN_SRC coq
+   #+BEGIN_SRC Coq
    Require Import Classes.RelationClasses.
 
    Instance PEq_equiv: @Equivalence Pred PEq :=
@@ -384,7 +384,7 @@ Print Assumptions my_lemma.
    ~rewrite~. Once again, we have syntactic sugar to avoir bothering explicitely
    with typeclasses.  In the case of a binary function, it would look like this:
 
-   #+BEGIN_SRC coq
+   #+BEGIN_SRC Coq
    Add Parametric Morphism : f with
       signature (rel ==> rel ==> rel) as foo.
    #+END_SRC
@@ -397,7 +397,7 @@ Print Assumptions my_lemma.
    It is clearer with an example. Say we define the union of two predicates, we
    can actually rewrite any equivalent predicates under it.
 
-   #+BEGIN_SRC coq
+   #+BEGIN_SRC Coq
 
    Require Import Setoid.
    Definition PJoin P1 P2: Pred := λ s, P1 s \/ P2 s.
@@ -432,7 +432,7 @@ Print Assumptions my_lemma.
    Finally, as was the case with relations, we can instead explicitely declare
    the adequate instance. The Typeclass at use here is Proper:
    
-   #+BEGIN_SRC coq
+   #+BEGIN_SRC Coq
 
    Instance foo: Proper (PEq ==> PEq ==> PEq) PJoin.
    Proof.
