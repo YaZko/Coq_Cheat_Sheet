@@ -1,0 +1,5 @@
+# -*- mode: org; -*-
+#+OPTIONS: tex:t
+#+STARTUP: entitiespretty
+#+SETUPFILE: org-html-themes/setup/theme-readtheorg.setup
+#+HTML_MATHJAX: path:"http://orgmode.org/mathjax/MathJax.js"
