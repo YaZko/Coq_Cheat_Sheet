@@ -1,3 +1,7 @@
+#+TITLE: Index
+#+AUTHOR: Platypus
+#+SETUPFILE: config.setup
+
 * Computation
 ** Eval
 *** Compute
@@ -442,3 +446,9 @@ Print Assumptions my_lemma.
    Qed.
 
    #+END_SRC
+
+* TODO: pattern matching. Unify with intro patterns and talk about the let, let with the backstick
+
+* TODO: switching goals
+
+
