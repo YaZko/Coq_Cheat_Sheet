@@ -1,11 +1,24 @@
-addons:
-  apt:
-    packages:
-    - emacs23-nox
+language: generic
+sudo: required
+dist: trusty
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y org-mode
 script: make
-after_success: ./push.sh
+after_success:
+  - cd ..
+  - git clone -b gh-pages "https://$GH_TOKEN@github.com/$USERNAME/$REPO.git" gh-pages
+  - cd gh-pages
+  - git config user.name "Travis Worker"
+  - git config user.email "travis@travis-ci.org"
+  - cp ../$REPO/*.{html,css} ./
+  - git add -A .
+  - git commit -m "Update $(date '+%m/%d/%y %H:%M')."
+  - git push -q origin gh-pages
 notifications:
   email: false
 env:
   global:
-    secure: WZrUYUZ1TRnZqCppjccWG8PaociUX5WT+94VqTDrA3Wop5sYwVqnc1WIHWCF9BxP7JtrwHAt+bedE7Gk4bF6AJnjDaHFJGpmkwucbNg+qUbsy/rhPN7fLMhWlP4sjCCX11IaruJQMWgRmcsYu+2NK2TgjcDW7imtdts+0+hJ2NRjSNZY8o90WnEn27vTOGHrb2tnw9ApfekLL6yxnFGeybr8oWJIIj5s+3JAJduE3OKlw1gb5CYPXSZhEsLKgzybxv9u9nx6h4WgkwUGfyyzj+x5aZrr+GeZPjpuDpnUC2jQoW84q4+jIyR8ngCl8oWpo3sKWc4ZkIqEgLIpVbdJ11/NBFIIJIZs5T4oicmIh17BlCeGe5CZX3TciGv5CX0iantgvHQsLd8l+evw+StFaiD8qAtlNPn/kxUgTYpiXvjI1AL6ig7w7a7powofrma85G01ph3Hh4nyZFvH3xbYNSxH6IIIlFY6TRHDQ1LtYNBOrLzZ3a8zjm9m5hFQEmWqz7Skzzh9CBMIBGTGMXHkmh5wbxByI8TscKh7QERon9AbbI+T0NBqE3tNEPhKg0XS4c/DxU3ktEoy3I09zhGm4IZSICMSXbWQy2Gq4jv55two1+UrOrIN+YCp2ZskTBLV/jnbic1MmwifFiQfFlnnMCCQ3gQ3BcoTeX2TIKTOpmw=
+    - secure: WZrUYUZ1TRnZqCppjccWG8PaociUX5WT+94VqTDrA3Wop5sYwVqnc1WIHWCF9BxP7JtrwHAt+bedE7Gk4bF6AJnjDaHFJGpmkwucbNg+qUbsy/rhPN7fLMhWlP4sjCCX11IaruJQMWgRmcsYu+2NK2TgjcDW7imtdts+0+hJ2NRjSNZY8o90WnEn27vTOGHrb2tnw9ApfekLL6yxnFGeybr8oWJIIj5s+3JAJduE3OKlw1gb5CYPXSZhEsLKgzybxv9u9nx6h4WgkwUGfyyzj+x5aZrr+GeZPjpuDpnUC2jQoW84q4+jIyR8ngCl8oWpo3sKWc4ZkIqEgLIpVbdJ11/NBFIIJIZs5T4oicmIh17BlCeGe5CZX3TciGv5CX0iantgvHQsLd8l+evw+StFaiD8qAtlNPn/kxUgTYpiXvjI1AL6ig7w7a7powofrma85G01ph3Hh4nyZFvH3xbYNSxH6IIIlFY6TRHDQ1LtYNBOrLzZ3a8zjm9m5hFQEmWqz7Skzzh9CBMIBGTGMXHkmh5wbxByI8TscKh7QERon9AbbI+T0NBqE3tNEPhKg0XS4c/DxU3ktEoy3I09zhGm4IZSICMSXbWQy2Gq4jv55two1+UrOrIN+YCp2ZskTBLV/jnbic1MmwifFiQfFlnnMCCQ3gQ3BcoTeX2TIKTOpmw=
+    - USERNAME=YaZko
+    - REPO=Coq_Cheat_Sheet
