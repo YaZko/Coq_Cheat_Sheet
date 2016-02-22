@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Index</title>
-<!-- 2016-02-21 Sun 16:58 -->
+<!-- 2016-02-22 Mon 15:16 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Platypus" />
@@ -206,8 +206,9 @@ for the JavaScript code in this tag.
 <li><a href="#sec-10-2">10.2. Adding morphisms</a></li>
 </ul>
 </li>
-<li><a href="#sec-11">11. TODO: pattern matching. Unify with intro patterns and talk about the let, let with the backstick</a></li>
+<li><a href="#sec-11">11. Pattern matching. Unify with intro patterns and talk about the let, let with the backstick</a></li>
 <li><a href="#sec-12">12. TODO: switching goals</a></li>
+<li><a href="#sec-13">13. Notations from the standard library</a></li>
 </ul>
 </div>
 </div>
@@ -883,17 +884,55 @@ the adequate instance. The Typeclass at use here is Proper:
 </div>
 </div>
 </div>
+
 <div id="outline-container-sec-11" class="outline-2">
-<h2 id="sec-11"><span class="section-number-2">11</span> TODO: pattern matching. Unify with intro patterns and talk about the let, let with the backstick</h2>
+<h2 id="sec-11"><span class="section-number-2">11</span> Pattern matching. Unify with intro patterns and talk about the let, let with the backstick</h2>
+<div class="outline-text-2" id="text-11">
+<p>
+** A particular case of pattern matching, the let-binding
+Coq does not allow pattern matching over arguments of a function, as opposed to OCaml, even if the inductive type of this constructor admits a unique constructor. One can avoid an arguably heavy match using the let-binding construct:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-coq"><span class="org-keyword">Definition</span> <span class="org-function-name">&#960;1</span> (A B: <span class="org-builtin">Type</span>) (x: A * B) -&gt; A :=
+let (a,b) := x in a.
+</pre>
+</div>
+
+<p>
+Note however that by default, you can only destruct one layer of the argument. Using a tick allows you to destruct at arbitrary depth:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-coq"><span class="org-keyword">Definition</span> <span class="org-function-name">&#960;11</span> (A B C: <span class="org-builtin">Type</span>) (x: (A * B) * C) -&gt; A :=
+let '((a,b),c) := x in a.
+</pre>
+</div>
+</div>
 </div>
 
 <div id="outline-container-sec-12" class="outline-2">
 <h2 id="sec-12"><span class="section-number-2">12</span> TODO: switching goals</h2>
 </div>
+
+<div id="outline-container-sec-13" class="outline-2">
+<h2 id="sec-13"><span class="section-number-2">13</span> Notations from the standard library</h2>
+<div class="outline-text-2" id="text-13">
+<p>
+Importing the utf8 standard library defines a few convenient utf8-based notations. In particular an elegant way to define anonymous functions:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-coq">let f := &#955; x y, x + y.
+</pre>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Platypus</p>
-<p class="date">Created: 2016-02-21 Sun 16:58</p>
+<p class="date">Created: 2016-02-22 Mon 15:16</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.4)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
