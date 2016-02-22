@@ -453,8 +453,27 @@ Print Assumptions my_lemma.
 
    #+END_SRC
 
-* TODO: pattern matching. Unify with intro patterns and talk about the let, let with the backstick
+
+* Pattern matching. Unify with intro patterns and talk about the let, let with the backstick
+  ** A particular case of pattern matching, the let-binding
+  Coq does not allow pattern matching over arguments of a function, as opposed to OCaml, even if the inductive type of this constructor admits a unique constructor. One can avoid an arguably heavy match using the let-binding construct:
+
+#+BEGIN_SRC coq
+Definition π1 (A B: Type) (x: A * B) -> A :=
+let (a,b) := x in a.
+#+END_SRC
+
+Note however that by default, you can only destruct one layer of the argument. Using a tick allows you to destruct at arbitrary depth:
+#+BEGIN_SRC coq
+Definition π11 (A B C: Type) (x: (A * B) * C) -> A :=
+let '((a,b),c) := x in a.
+#+END_SRC
+
 
 * TODO: switching goals
 
-
+* Notations from the standard library
+  Importing the utf8 standard library defines a few convenient utf8-based notations. In particular an elegant way to define anonymous functions:
+#+BEGIN_SRC coq
+let f := λ x y, x + y.
+#+END_SRC 
