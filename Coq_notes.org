@@ -470,10 +470,49 @@ let '((a,b),c) := x in a.
 #+END_SRC
 
 
-* TODO: switching goals
+* Switching and selecting goals
+
+When several subgoals are left to solve, it is possible to solve some goals
+before others (either because you don't feel in the mood for a given subgoal or
+because solving some goal will instantiate lots of existential variables, making
+it easier to solve the remaining goals afterwards).
+
+** Switching to a specific goal
+
+You can switch to solve goal ~num~ with the ~Focus~ vernacular command:
+
+#+BEGIN_SRC coq
+Focus 2.
+#+END_SRC
+
+** Goal selectors.
+
+When the proof of the n-th goal is fairly easy, i.e. it is doable in a single
+tactic, we can use goal selectors that look more lightweight.
+
+To apply tactic ~tac~ to the n-th subgoal:
+#+BEGIN_SRC coq
+n: tac.
+#+END_SRC
+
+*** In 8.5, the all: selector
+In Coq 8.5, the ~all:~ selector applies a given tactic to all goals.  This seems
+very handy in cases where a ~eapply~ has generated lots of existentials, most of
+which would be solved in a particular subgoal. The strategy I would use here is
+to apply some tactic to the most discriminant subgoal and then call ~auto~ or
+~eauto~ on the rest of the subgoals.
+
+#+BEGIN_SRC coq
+n: tac.
+all: auto.
+#+END_SRC
+
+
 
 * Notations from the standard library
   Importing the utf8 standard library defines a few convenient utf8-based notations. In particular an elegant way to define anonymous functions:
 #+BEGIN_SRC coq
+Require Import Utf8.
+
 let f := λ x y, x + y.
 #+END_SRC 
