@@ -455,7 +455,7 @@ Print Assumptions my_lemma.
 
 
 * Pattern matching. Unify with intro patterns and talk about the let, let with the backstick
-  ** A particular case of pattern matching, the let-binding
+** A particular case of pattern matching, the let-binding
   Coq does not allow pattern matching over arguments of a function, as opposed to OCaml, even if the inductive type of this constructor admits a unique constructor. One can avoid an arguably heavy match using the let-binding construct:
 
 #+BEGIN_SRC coq
