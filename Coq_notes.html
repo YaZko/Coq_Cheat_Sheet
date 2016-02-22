@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Index</title>
-<!-- 2016-02-22 Mon 15:55 -->
+<!-- 2016-02-22 Mon 16:21 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Platypus" />
@@ -211,7 +211,16 @@ for the JavaScript code in this tag.
 <li><a href="#sec-11-1">11.1. A particular case of pattern matching, the let-binding</a></li>
 </ul>
 </li>
-<li><a href="#sec-12">12. TODO: switching goals</a></li>
+<li><a href="#sec-12">12. Switching and selecting goals</a>
+<ul>
+<li><a href="#sec-12-1">12.1. Switching to a specific goal</a></li>
+<li><a href="#sec-12-2">12.2. Goal selectors.</a>
+<ul>
+<li><a href="#sec-12-2-1">12.2.1. In 8.5, the all: selector</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#sec-13">13. Notations from the standard library</a></li>
 </ul>
 </div>
@@ -920,8 +929,70 @@ let '((a,b),c) := x in a.
 </div>
 
 <div id="outline-container-sec-12" class="outline-2">
-<h2 id="sec-12"><span class="section-number-2">12</span> TODO: switching goals</h2>
+<h2 id="sec-12"><span class="section-number-2">12</span> Switching and selecting goals</h2>
+<div class="outline-text-2" id="text-12">
+<p>
+When several subgoals are left to solve, it is possible to solve some goals
+before others (either because you don't feel in the mood for a given subgoal or
+because solving some goal will instantiate lots of existential variables, making
+it easier to solve the remaining goals afterwards).
+</p>
 </div>
+
+<div id="outline-container-sec-12-1" class="outline-3">
+<h3 id="sec-12-1"><span class="section-number-3">12.1</span> Switching to a specific goal</h3>
+<div class="outline-text-3" id="text-12-1">
+<p>
+You can switch to solve goal <code>num</code> with the <code>Focus</code> vernacular command:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-coq">Focus 2.
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-12-2" class="outline-3">
+<h3 id="sec-12-2"><span class="section-number-3">12.2</span> Goal selectors.</h3>
+<div class="outline-text-3" id="text-12-2">
+<p>
+When the proof of the n-th goal is fairly easy, i.e. it is doable in a single
+tactic, we can use goal selectors that look more lightweight.
+</p>
+
+<p>
+To apply tactic <code>tac</code> to the n-th subgoal:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-coq">n: tac.
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-12-2-1" class="outline-4">
+<h4 id="sec-12-2-1"><span class="section-number-4">12.2.1</span> In 8.5, the all: selector</h4>
+<div class="outline-text-4" id="text-12-2-1">
+<p>
+In Coq 8.5, the <code>all:</code> selector applies a given tactic to all goals.  This seems
+very handy in cases where a <code>eapply</code> has generated lots of existentials, most of
+which would be solved in a particular subgoal. The strategy I would use here is
+to apply some tactic to the most discriminant subgoal and then call <code>auto</code> or
+<code>eauto</code> on the rest of the subgoals.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-coq">n: tac.
+all: auto.
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
 
 <div id="outline-container-sec-13" class="outline-2">
 <h2 id="sec-13"><span class="section-number-2">13</span> Notations from the standard library</h2>
@@ -931,7 +1002,9 @@ Importing the utf8 standard library defines a few convenient utf8-based notation
 </p>
 <div class="org-src-container">
 
-<pre class="src src-coq">let f := &#955; x y, x + y.
+<pre class="src src-coq"><span class="org-keyword">Require</span> <span class="org-function-name">Import</span> Utf8.
+
+let f := &#955; x y, x + y.
 </pre>
 </div>
 </div>
@@ -939,7 +1012,7 @@ Importing the utf8 standard library defines a few convenient utf8-based notation
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Platypus</p>
-<p class="date">Created: 2016-02-22 Mon 15:55</p>
+<p class="date">Created: 2016-02-22 Mon 16:21</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.4)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
