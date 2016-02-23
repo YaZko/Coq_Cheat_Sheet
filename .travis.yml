@@ -4,6 +4,7 @@ dist: trusty
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y org-mode
+  - git clone https://github.com/ProofGeneral/PG.git
 script: make
 after_success:
   - cd ..
