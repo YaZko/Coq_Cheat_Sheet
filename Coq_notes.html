@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Index</title>
-<!-- 2016-02-22 Mon 16:21 -->
+<!-- 2016-02-23 Tue 09:57 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Platypus" />
@@ -316,32 +316,32 @@ From Software Foundation, used to keep track of the ongoing case
 
 <div class="org-src-container">
 
-<pre class="src src-coq"><span class="org-keyword">Require</span> <span class="org-function-name">String</span>. Open Scope string_scope.
+<pre class="src src-coq"><span class="org-keyword">Require</span> String. <span class="org-keyword">Open Scope</span> string_scope.
 
-Ltac move_to_top x :=
-match reverse goal with
-| H : _ | - _ =&gt; try move x after H |
-end.
+<span class="org-keyword">Ltac</span> <span class="org-function-name">move_to_top</span> x :=
+<span class="org-type">match</span> reverse goal <span class="org-type">with</span>
+| H : _ | - _ =&gt; <span class="org-proof-tacticals-name">try</span> <span class="org-proof-tactics-name">move</span> x <span class="org-type">after</span> H |
+<span class="org-type">end</span>.
 
-<span class="org-keyword">Tactic</span> Notation <span class="org-string">"assert_eq"</span> ident(x) constr(v) :=
-let H := fresh in
-assert (x = v) as H by reflexivity;
-clear H.
+<span class="org-keyword">Tactic Notation</span> <span class="org-string">"assert_eq"</span> ident(x) constr(v) :=
+<span class="org-type">let</span> H := fresh <span class="org-type">in</span>
+<span class="org-proof-tactics-name">assert</span> (x = v) <span class="org-type">as</span> H <span class="org-coq-solve-tactics">by</span> <span class="org-coq-solve-tactics">reflexivity</span>;
+<span class="org-proof-tactics-name">clear</span> H.
 
-<span class="org-keyword">Tactic</span> Notation <span class="org-string">"Case_aux"</span> ident(x) constr(name) :=
-first [
-set (x := name); move_to_top x
+<span class="org-keyword">Tactic Notation</span> <span class="org-string">"Case_aux"</span> ident(x) constr(name) :=
+<span class="org-proof-tacticals-name">first</span> [
+<span class="org-proof-tactics-name">set</span> (x := name); move_to_top x
 | assert_eq x name; move_to_top x
-| fail 1 <span class="org-string">"because we are working on a different case"</span> ].
+| <span class="org-keyword">fail</span> 1 <span class="org-string">"because we are working on a different case"</span> ].
 
-<span class="org-keyword">Tactic</span> Notation <span class="org-string">"Case"</span> constr(name) := Case_aux Case name.
-<span class="org-keyword">Tactic</span> Notation <span class="org-string">"SCase"</span> constr(name) := Case_aux SCase name.
-<span class="org-keyword">Tactic</span> Notation <span class="org-string">"SSCase"</span> constr(name) := Case_aux SSCase name.
-<span class="org-keyword">Tactic</span> Notation <span class="org-string">"SSSCase"</span> constr(name) := Case_aux SSSCase name.
-<span class="org-keyword">Tactic</span> Notation <span class="org-string">"SSSSCase"</span> constr(name) := Case_aux SSSSCase name.
-<span class="org-keyword">Tactic</span> Notation <span class="org-string">"SSSSSCase"</span> constr(name) := Case_aux SSSSSCase name.
-<span class="org-keyword">Tactic</span> Notation <span class="org-string">"SSSSSSCase"</span> constr(name) := Case_aux SSSSSSCase name.
-<span class="org-keyword">Tactic</span> Notation <span class="org-string">"SSSSSSSCase"</span> constr(name) := Case_aux SSSSSSSCase name.
+<span class="org-keyword">Tactic Notation</span> <span class="org-string">"Case"</span> constr(name) := Case_aux Case name.
+<span class="org-keyword">Tactic Notation</span> <span class="org-string">"SCase"</span> constr(name) := Case_aux SCase name.
+<span class="org-keyword">Tactic Notation</span> <span class="org-string">"SSCase"</span> constr(name) := Case_aux SSCase name.
+<span class="org-keyword">Tactic Notation</span> <span class="org-string">"SSSCase"</span> constr(name) := Case_aux SSSCase name.
+<span class="org-keyword">Tactic Notation</span> <span class="org-string">"SSSSCase"</span> constr(name) := Case_aux SSSSCase name.
+<span class="org-keyword">Tactic Notation</span> <span class="org-string">"SSSSSCase"</span> constr(name) := Case_aux SSSSSCase name.
+<span class="org-keyword">Tactic Notation</span> <span class="org-string">"SSSSSSCase"</span> constr(name) := Case_aux SSSSSSCase name.
+<span class="org-keyword">Tactic Notation</span> <span class="org-string">"SSSSSSSCase"</span> constr(name) := Case_aux SSSSSSSCase name.
 </pre>
 </div>
 </div>
@@ -360,7 +360,7 @@ We can declare them at define time by putting curly brackets around the argument
 
 <div class="org-src-container">
 
-<pre class="src src-coq"><span class="org-keyword">Inductive</span> <span class="org-function-name">list</span> {A : <span class="org-builtin">Type</span>} : <span class="org-builtin">Type</span> :=
+<pre class="src src-coq"><span class="org-keyword">Inductive</span> <span class="org-function-name">list</span> {<span class="org-variable-name">A</span> : <span class="org-type">Type</span>} : <span class="org-type">Type</span> :=
  | nil : list
  | cons : A -&gt; list -&gt; list.
 </pre>
@@ -415,7 +415,7 @@ One can use different tactics to move hypotheses from the context to the goal.
 
 <div class="org-src-container">
 
-<pre class="src src-coq">revert EQ
+<pre class="src src-coq"><span class="org-proof-tactics-name">revert</span> EQ
 
 a, b : A
 ---------
@@ -427,7 +427,7 @@ OR
 </p>
 <div class="org-src-container">
 
-<pre class="src src-coq">generalize EQ
+<pre class="src src-coq"><span class="org-proof-tactics-name">generalize</span> EQ
 
 a, b : A
 EQ : a = b
@@ -446,12 +446,12 @@ We can also generalize terms of type in Type.
 
 <div class="org-src-container">
 
-<pre class="src src-coq">generalize a
+<pre class="src src-coq"><span class="org-proof-tactics-name">generalize</span> a
 
 a, b : A
 EQ : a = b
 ---------
-forall a0: A, b = a0
+<span class="org-type">forall</span> <span class="org-variable-name">a0</span>: A, b = a0
 </pre>
 </div>
 
@@ -462,11 +462,11 @@ This situation is solved using generalize dependent.
 
 <div class="org-src-container">
 
-<pre class="src src-coq">generalize dependent a
+<pre class="src src-coq"><span class="org-proof-tactics-name">generalize dependent</span> a
 
 b : A
 ---------
-forall a : A, a = b -&gt; b = a
+<span class="org-type">forall</span> <span class="org-variable-name">a</span> : A, a = b -&gt; b = a
 </pre>
 </div>
 </div>
@@ -480,9 +480,9 @@ forall a : A, a = b -&gt; b = a
 <div class="outline-text-3" id="text-7-1">
 <div class="org-src-container">
 
-<pre class="src src-coq">Ltac dup H :=
-let H' := fresh <span class="org-string">"H"</span> in
-remember H as H'; clear HeqH'.
+<pre class="src src-coq"><span class="org-keyword">Ltac</span> <span class="org-function-name">dup</span> H :=
+<span class="org-type">let</span> H' := fresh <span class="org-string">"H"</span> <span class="org-type">in</span>
+remember H <span class="org-type">as</span> H'; <span class="org-proof-tactics-name">clear</span> HeqH'.
 </pre>
 </div>
 </div>
@@ -492,9 +492,9 @@ remember H as H'; clear HeqH'.
 <div class="outline-text-3" id="text-7-2">
 <div class="org-src-container">
 
-<pre class="src src-coq">Ltac dup H :=
-let H' := fresh <span class="org-string">"H"</span> in
-generalize dependent H; intros H'.
+<pre class="src src-coq"><span class="org-keyword">Ltac</span> <span class="org-function-name">dup</span> H :=
+<span class="org-type">let</span> H' := fresh <span class="org-string">"H"</span> <span class="org-type">in</span>
+<span class="org-proof-tactics-name">generalize dependent</span> H; <span class="org-proof-tactics-name">intros</span> H'.
 </pre>
 </div>
 </div>
@@ -504,9 +504,9 @@ generalize dependent H; intros H'.
 <div class="outline-text-3" id="text-7-3">
 <div class="org-src-container">
 
-<pre class="src src-coq">Ltac dup H :=
-let n := fresh H in
-assert (n := H)
+<pre class="src src-coq"><span class="org-keyword">Ltac</span> <span class="org-function-name">dup</span> H :=
+<span class="org-type">let</span> n := fresh H <span class="org-type">in</span>
+<span class="org-proof-tactics-name">assert</span> (n := H)
 </pre>
 </div>
 </div>
@@ -528,9 +528,9 @@ Looking for an hypothesis of the form P x y, for any x and y.
 
 <div class="org-src-container">
 
-<pre class="src src-coq">match goal with
-  H : P ?x ?y |- _ =&gt; destruct H; auto
-end.
+<pre class="src src-coq"><span class="org-type">match</span> goal <span class="org-type">with</span>
+  <span class="org-function-name">H</span> : P ?x ?y |- _ =&gt; <span class="org-proof-tactics-name">destruct</span> H; <span class="org-proof-tactics-name">auto</span>
+<span class="org-type">end</span>.
 </pre>
 </div>
 <p>
@@ -548,14 +548,14 @@ The following example shows how to use hypotheses matching to remove duplicates 
 
 <div class="org-src-container">
 
-<pre class="src src-coq">Goal P x y -&gt; P x y -&gt; P x z -&gt; P x z -&gt; P x z -&gt; P y z.
+<pre class="src src-coq"><span class="org-keyword">Goal</span> <span class="org-function-name">P</span> x y -&gt; P x y -&gt; P x z -&gt; P x z -&gt; P x z -&gt; P y z.
 <span class="org-keyword">Proof</span>.
-  intros.
+  <span class="org-proof-tactics-name">intros</span>.
 
-  repeat match goal with
-    H1 : P ?x ?y,
-        H2: P ?x ?y |- _ =&gt; clear H1
-  end.
+  <span class="org-proof-tacticals-name">repeat</span> <span class="org-type">match</span> goal <span class="org-type">with</span>
+    <span class="org-function-name">H1</span> : P ?x ?y,
+        H2: P ?x ?y |- _ =&gt; <span class="org-proof-tactics-name">clear</span> H1
+  <span class="org-type">end</span>.
 <span class="org-keyword">Qed</span>.
 </pre>
 </div>
@@ -572,9 +572,9 @@ Using <code>context</code>:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-coq">match goal with
-  H : context [P ?x ?y] |- _ =&gt; <span class="org-comment-delimiter">(* </span><span class="org-comment">do stuff </span><span class="org-comment-delimiter">*)</span>
-end.
+<pre class="src src-coq"><span class="org-type">match</span> goal <span class="org-type">with</span>
+  <span class="org-function-name">H</span> : context [P ?x ?y] |- _ =&gt; <span class="org-comment-delimiter">(* </span><span class="org-comment">do stuff </span><span class="org-comment-delimiter">*)</span>
+<span class="org-type">end</span>.
 </pre>
 </div>
 </div>
@@ -587,9 +587,9 @@ The matching can also be made on the conlusion of the goal (after <code>|-</code
 </p>
 <div class="org-src-container">
 
-<pre class="src src-coq">match goal with
+<pre class="src src-coq"><span class="org-type">match</span> goal <span class="org-type">with</span>
   |- context [P ?x ?y] =&gt; <span class="org-comment-delimiter">(* </span><span class="org-comment">do stuff </span><span class="org-comment-delimiter">*)</span>
-end.
+<span class="org-type">end</span>.
 </pre>
 </div>
 
@@ -598,10 +598,10 @@ Of course, multiple patterns can be matched.
 </p>
 <div class="org-src-container">
 
-<pre class="src src-coq">repeat match goal with
-  H : context [P ?x ?y] |- _ =&gt; <span class="org-comment-delimiter">(* </span><span class="org-comment">do stuff </span><span class="org-comment-delimiter">*)</span>
+<pre class="src src-coq"><span class="org-proof-tacticals-name">repeat</span> <span class="org-type">match</span> goal <span class="org-type">with</span>
+  <span class="org-function-name">H</span> : context [P ?x ?y] |- _ =&gt; <span class="org-comment-delimiter">(* </span><span class="org-comment">do stuff </span><span class="org-comment-delimiter">*)</span>
 | |- context [P ?x ?y] =&gt; <span class="org-comment-delimiter">(* </span><span class="org-comment">do stuff </span><span class="org-comment-delimiter">*)</span>
-end.
+<span class="org-type">end</span>.
 </pre>
 </div>
 <p>
@@ -621,14 +621,14 @@ Sometimes we need to generate fresh names inside tactics:
 </p>
 <div class="org-src-container">
 
-<pre class="src src-coq">let n := fresh in <span class="org-comment-delimiter">(* </span><span class="org-comment">generate new name, probably H0, H1, H2 </span><span class="org-comment-delimiter">*)</span>
-intro n
+<pre class="src src-coq"><span class="org-type">let</span> n := fresh <span class="org-type">in</span> <span class="org-comment-delimiter">(* </span><span class="org-comment">generate new name, probably H0, H1, H2 </span><span class="org-comment-delimiter">*)</span>
+<span class="org-proof-tactics-name">intro</span> n
 
-let n := fresh H in <span class="org-comment-delimiter">(* </span><span class="org-comment">generate new name, based on the name of H </span><span class="org-comment-delimiter">*)</span>
-intro n
+<span class="org-type">let</span> n := fresh H <span class="org-type">in</span> <span class="org-comment-delimiter">(* </span><span class="org-comment">generate new name, based on the name of H </span><span class="org-comment-delimiter">*)</span>
+<span class="org-proof-tactics-name">intro</span> n
 
-let n := fresh <span class="org-string">"H"</span> in <span class="org-comment-delimiter">(* </span><span class="org-comment">generate new name, based on the given string "H" </span><span class="org-comment-delimiter">*)</span>
-intro n
+<span class="org-type">let</span> n := fresh <span class="org-string">"H"</span> <span class="org-type">in</span> <span class="org-comment-delimiter">(* </span><span class="org-comment">generate new name, based on the given string "H" </span><span class="org-comment-delimiter">*)</span>
+<span class="org-proof-tactics-name">intro</span> n
 </pre>
 </div>
 </div>
@@ -641,10 +641,10 @@ One can view the Ltac code of a tactic (when it's actually written in Ltac).
 </p>
 <div class="org-src-container">
 
-<pre class="src src-coq">Print Ltac inv.
+<pre class="src src-coq"><span class="org-keyword">Print</span> <span class="org-keyword">Ltac</span> <span class="org-function-name">inv</span>.
 
 ---&gt;
-Ltac inv H := inversion H; clear H; subst
+<span class="org-keyword">Ltac</span> <span class="org-function-name">inv</span> H := <span class="org-proof-tactics-name">inversion</span> H; <span class="org-proof-tactics-name">clear</span> H; <span class="org-proof-tactics-name">subst</span>
 </pre>
 </div>
 </div>
@@ -686,7 +686,7 @@ To show what axioms a given lemma depends on, one can use the following vernacul
 
 <div class="org-src-container">
 
-<pre class="src src-coq">Print Assumptions my_lemma.
+<pre class="src src-coq"><span class="org-keyword">Print</span> Assumptions my_lemma.
 </pre>
 </div>
 </div>
@@ -712,11 +712,11 @@ roughly as follows:
 
 <div class="org-src-container">
 
-<pre class="src src-coq">Add Parametric Relation (A: <span class="org-builtin">Type</span>): A (@R A)
-reflexivity proved by ...
-symmetry proved by ...
-transitivity proved by ...
-as R_is_an_equivalence_relation.
+<pre class="src src-coq"><span class="org-keyword">Add Parametric Relation</span> (<span class="org-variable-name">A</span>: <span class="org-type">Type</span>): A (@R A)
+<span class="org-coq-solve-tactics">reflexivity</span> proved <span class="org-coq-solve-tactics">by</span> ...
+<span class="org-proof-tactics-name">symmetry</span> proved <span class="org-coq-solve-tactics">by</span> ...
+<span class="org-proof-tactics-name">transitivity</span> proved <span class="org-coq-solve-tactics">by</span> ...
+<span class="org-type">as</span> R_is_an_equivalence_relation.
 </pre>
 </div>
 
@@ -730,29 +730,29 @@ declare it as so.
 
 <div class="org-src-container">
 
-<pre class="src src-coq"><span class="org-keyword">Axiom</span> <span class="org-function-name">state</span>: <span class="org-builtin">Type</span>.
-<span class="org-keyword">Definition</span> <span class="org-function-name">Pred</span>: state -&gt; <span class="org-builtin">Prop</span>.
-<span class="org-keyword">Definition</span> <span class="org-function-name">PEq</span> (P1 P2: Pred): <span class="org-builtin">Prop</span> := forall x, P1 x &lt;-&gt; P2 x.
-<span class="org-keyword">Lemma</span> <span class="org-function-name">PEq_reflexive</span>: forall P, P &#8801; P.
+<pre class="src src-coq"><span class="org-keyword">Axiom</span> <span class="org-variable-name">state</span>: <span class="org-type">Type</span>.
+<span class="org-keyword">Definition</span> <span class="org-function-name">Pred</span>: state -&gt; <span class="org-type">Prop</span>.
+<span class="org-keyword">Definition</span> <span class="org-function-name">PEq</span> (<span class="org-variable-name">P1 P2</span>: Pred): <span class="org-type">Prop</span> := <span class="org-type">forall</span> <span class="org-variable-name">x</span>, P1 x &lt;-&gt; P2 x.
+<span class="org-keyword">Lemma</span> <span class="org-function-name">PEq_reflexive</span>: <span class="org-type">forall</span> <span class="org-variable-name">P</span>, P &#8801; P.
 <span class="org-keyword">Proof</span>.
-  intros P s; go.
+  <span class="org-proof-tactics-name">intros</span> P s; go.
 <span class="org-keyword">Qed</span>.
 
-<span class="org-keyword">Lemma</span> <span class="org-function-name">PEq_trans</span>: forall P1 P2 P3 (H1: P1 &#8801; P2) (H2: P2 &#8801; P3),
+<span class="org-keyword">Lemma</span> <span class="org-function-name">PEq_trans</span>: <span class="org-type">forall</span> P1 P2 P3 (<span class="org-variable-name">H1</span>: P1 &#8801; P2) (<span class="org-variable-name">H2</span>: P2 &#8801; P3),
     P1 &#8801; P3.
-  intros P1 P2 P3 H1 H2 s; split; intros H3; [apply H2, H1 | apply H1,H2]; assumption.
+  <span class="org-proof-tactics-name">intros</span> P1 P2 P3 H1 H2 s; <span class="org-proof-tactics-name">split</span>; <span class="org-proof-tactics-name">intros</span> H3; [<span class="org-proof-tactics-name">apply</span> H2, H1 | <span class="org-proof-tactics-name">apply</span> H1,H2]; <span class="org-coq-solve-tactics">assumption</span>.
 <span class="org-keyword">Qed</span>.
 
-<span class="org-keyword">Lemma</span> <span class="org-function-name">PEq_symm</span>: forall P1 P2 (H: P1 &#8801; P2), P2 &#8801; P1.
+<span class="org-keyword">Lemma</span> <span class="org-function-name">PEq_symm</span>: <span class="org-type">forall</span> P1 P2 (<span class="org-variable-name">H</span>: P1 &#8801; P2), P2 &#8801; P1.
 <span class="org-keyword">Proof</span>.
-  intros P1 P2 H s; split; intros H'; apply H; assumption.
+  <span class="org-proof-tactics-name">intros</span> P1 P2 H s; <span class="org-proof-tactics-name">split</span>; <span class="org-proof-tactics-name">intros</span> H'; <span class="org-proof-tactics-name">apply</span> H; <span class="org-coq-solve-tactics">assumption</span>.
 <span class="org-keyword">Qed</span>.
 
-Add Parametric Relation: Pred PEq
-    reflexivity proved by PEq_reflexive
-    symmetry proved by PEq_symm
-    transitivity proved by PEq_trans
-      as PEq_equiv.
+<span class="org-keyword">Add Parametric Relation</span>: Pred PEq
+    <span class="org-coq-solve-tactics">reflexivity</span> proved <span class="org-coq-solve-tactics">by</span> PEq_reflexive
+    <span class="org-proof-tactics-name">symmetry</span> proved <span class="org-coq-solve-tactics">by</span> PEq_symm
+    <span class="org-proof-tactics-name">transitivity</span> proved <span class="org-coq-solve-tactics">by</span> PEq_trans
+      <span class="org-type">as</span> PEq_equiv.
 </pre>
 </div>
 
@@ -768,22 +768,22 @@ relation is a preorder for instance:
 
 <div class="org-src-container">
 
-<pre class="src src-coq"><span class="org-keyword">Definition</span> <span class="org-function-name">PWeaker</span> (P1 P2: Pred): <span class="org-builtin">Prop</span> := forall s, P2 s -&gt; P1 s.
+<pre class="src src-coq"><span class="org-keyword">Definition</span> <span class="org-function-name">PWeaker</span> (<span class="org-variable-name">P1 P2</span>: Pred): <span class="org-type">Prop</span> := <span class="org-type">forall</span> <span class="org-variable-name">s</span>, P2 s -&gt; P1 s.
 
-<span class="org-keyword">Lemma</span> <span class="org-function-name">PWeaker_reflexive</span>: forall P, P &#8838; P.
+<span class="org-keyword">Lemma</span> <span class="org-function-name">PWeaker_reflexive</span>: <span class="org-type">forall</span> <span class="org-variable-name">P</span>, P &#8838; P.
 <span class="org-keyword">Proof</span>.
   go.
 <span class="org-keyword">Qed</span>.
 
-<span class="org-keyword">Lemma</span> <span class="org-function-name">PWeaker_trans</span>: forall P1 P2 P3 (H1: P1 &#8838; P2) (H2: P2 &#8838; P3), P1 &#8838; P3.
+<span class="org-keyword">Lemma</span> <span class="org-function-name">PWeaker_trans</span>: <span class="org-type">forall</span> P1 P2 P3 (<span class="org-variable-name">H1</span>: P1 &#8838; P2) (<span class="org-variable-name">H2</span>: P2 &#8838; P3), P1 &#8838; P3.
 <span class="org-keyword">Proof</span>.
-  intros P1 P2 P3 H1 H2 s H3; apply H1,H2,H3.
+  <span class="org-proof-tactics-name">intros</span> P1 P2 P3 H1 H2 s H3; <span class="org-proof-tactics-name">apply</span> H1,H2,H3.
 <span class="org-keyword">Qed</span>.
 
-Add Parametric Relation: Pred PWeaker
-    reflexivity proved by PWeaker_reflexive
-    transitivity proved by PWeaker_trans
-      as PWeaker_preorder.
+<span class="org-keyword">Add Parametric Relation</span>: Pred PWeaker
+    <span class="org-coq-solve-tactics">reflexivity</span> proved <span class="org-coq-solve-tactics">by</span> PWeaker_reflexive
+    <span class="org-proof-tactics-name">transitivity</span> proved <span class="org-coq-solve-tactics">by</span> PWeaker_trans
+      <span class="org-type">as</span> PWeaker_preorder.
 </pre>
 </div>
 
@@ -803,9 +803,9 @@ have written instead:
 
 <div class="org-src-container">
 
-<pre class="src src-coq"><span class="org-keyword">Require</span> <span class="org-function-name">Import</span> Classes.RelationClasses.
+<pre class="src src-coq"><span class="org-keyword">Require Import</span> Classes.RelationClasses.
 
-Instance PEq_equiv: @Equivalence Pred PEq :=
+<span class="org-keyword">Instance</span> <span class="org-function-name">PEq_equiv</span>: @Equivalence Pred PEq :=
  Equivalence_Reflexive := PEq_reflexive
  Equivalence_Symmetric := PEq_symm
  Equivalence_Transitive := PEq_trans.
@@ -825,8 +825,8 @@ with typeclasses.  In the case of a binary function, it would look like this:
 
 <div class="org-src-container">
 
-<pre class="src src-coq">Add Parametric Morphism : f with
-   signature (rel ==&gt; rel ==&gt; rel) as foo.
+<pre class="src src-coq"><span class="org-keyword">Add Parametric Morphism</span> : f <span class="org-type">with</span>
+<span class="org-type">   signature</span> (rel ==&gt; rel ==&gt; rel) <span class="org-type">as</span> foo.
 </pre>
 </div>
 
@@ -844,14 +844,14 @@ can actually rewrite any equivalent predicates under it.
 
 <div class="org-src-container">
 
-<pre class="src src-coq"><span class="org-keyword">Require</span> <span class="org-function-name">Import</span> Setoid.
-<span class="org-keyword">Definition</span> <span class="org-function-name">PJoin</span> P1 P2: Pred := &#955; s, P1 s \/ P2 s.
+<pre class="src src-coq"><span class="org-keyword">Require Import</span> Setoid.
+<span class="org-keyword">Definition</span> <span class="org-function-name">PJoin</span> P1 P2: Pred := <span class="org-coq-symbol-binder">&#955;</span> <span class="org-variable-name">s</span>, P1 s \/ P2 s.
 
-Add Parametric Morphism : PJoin with
-   signature (PEq ==&gt; PEq ==&gt; PEq) as foo.
+<span class="org-keyword">Add Parametric Morphism</span> : PJoin <span class="org-type">with</span>
+<span class="org-type">   signature</span> (PEq ==&gt; PEq ==&gt; PEq) <span class="org-type">as</span> foo.
 <span class="org-keyword">Proof</span>.
-  intros Q1 Q1' eq1 Q2 Q2' eq2 s; split; intros H;
-    (destruct H; [left; apply eq1; assumption | right; apply eq2; assumption]).
+  <span class="org-proof-tactics-name">intros</span> Q1 Q1' eq1 Q2 Q2' eq2 s; <span class="org-proof-tactics-name">split</span>; <span class="org-proof-tactics-name">intros</span> H;
+    (<span class="org-proof-tactics-name">destruct</span> H; [<span class="org-proof-tactics-name">left</span>; <span class="org-proof-tactics-name">apply</span> eq1; <span class="org-coq-solve-tactics">assumption</span> | <span class="org-proof-tactics-name">right</span>; <span class="org-proof-tactics-name">apply</span> eq2; <span class="org-coq-solve-tactics">assumption</span>]).
 <span class="org-keyword">Qed</span>.
 </pre>
 </div>
@@ -887,10 +887,10 @@ the adequate instance. The Typeclass at use here is Proper:
 
 <div class="org-src-container">
 
-<pre class="src src-coq">Instance foo: Proper (PEq ==&gt; PEq ==&gt; PEq) PJoin.
+<pre class="src src-coq"><span class="org-keyword">Instance</span> <span class="org-function-name">foo</span>: Proper (PEq ==&gt; PEq ==&gt; PEq) PJoin.
 <span class="org-keyword">Proof</span>.
-  intros Q1 Q1' eq1 Q2 Q2' eq2 s; split; intros H;
-    (destruct H; [left; apply eq1; assumption | right; apply eq2; assumption]).
+  <span class="org-proof-tactics-name">intros</span> Q1 Q1' eq1 Q2 Q2' eq2 s; <span class="org-proof-tactics-name">split</span>; <span class="org-proof-tactics-name">intros</span> H;
+    (<span class="org-proof-tactics-name">destruct</span> H; [<span class="org-proof-tactics-name">left</span>; <span class="org-proof-tactics-name">apply</span> eq1; <span class="org-coq-solve-tactics">assumption</span> | <span class="org-proof-tactics-name">right</span>; <span class="org-proof-tactics-name">apply</span> eq2; <span class="org-coq-solve-tactics">assumption</span>]).
 <span class="org-keyword">Qed</span>.
 </pre>
 </div>
@@ -910,8 +910,8 @@ Coq does not allow pattern matching over arguments of a function, as opposed to 
 
 <div class="org-src-container">
 
-<pre class="src src-coq"><span class="org-keyword">Definition</span> <span class="org-function-name">&#960;1</span> (A B: <span class="org-builtin">Type</span>) (x: A * B) -&gt; A :=
-let (a,b) := x in a.
+<pre class="src src-coq"><span class="org-keyword">Definition</span> <span class="org-function-name">&#960;1</span> (<span class="org-variable-name">A B</span>: <span class="org-type">Type</span>) (<span class="org-variable-name">x</span>: A * B) -&gt; A :=
+<span class="org-type">let</span> (a,b) := x <span class="org-type">in</span> a.
 </pre>
 </div>
 
@@ -920,8 +920,8 @@ Note however that by default, you can only destruct one layer of the argument. U
 </p>
 <div class="org-src-container">
 
-<pre class="src src-coq"><span class="org-keyword">Definition</span> <span class="org-function-name">&#960;11</span> (A B C: <span class="org-builtin">Type</span>) (x: (A * B) * C) -&gt; A :=
-let '((a,b),c) := x in a.
+<pre class="src src-coq"><span class="org-keyword">Definition</span> <span class="org-function-name">&#960;11</span> (<span class="org-variable-name">A B C</span>: <span class="org-type">Type</span>) (<span class="org-variable-name">x</span>: (A * B) * C) -&gt; A :=
+<span class="org-type">let</span> '((a,b),c) := x <span class="org-type">in</span> a.
 </pre>
 </div>
 </div>
@@ -948,7 +948,7 @@ You can switch to solve goal <code>num</code> with the <code>Focus</code> vernac
 
 <div class="org-src-container">
 
-<pre class="src src-coq">Focus 2.
+<pre class="src src-coq"><span class="org-keyword">Focus</span> 2.
 </pre>
 </div>
 </div>
@@ -985,7 +985,7 @@ to apply some tactic to the most discriminant subgoal and then call <code>auto</
 <div class="org-src-container">
 
 <pre class="src src-coq">n: tac.
-all: auto.
+all: <span class="org-proof-tactics-name">auto</span>.
 </pre>
 </div>
 </div>
@@ -1002,9 +1002,9 @@ Importing the utf8 standard library defines a few convenient utf8-based notation
 </p>
 <div class="org-src-container">
 
-<pre class="src src-coq"><span class="org-keyword">Require</span> <span class="org-function-name">Import</span> Utf8.
+<pre class="src src-coq"><span class="org-keyword">Require Import</span> Utf8.
 
-let f := &#955; x y, x + y.
+<span class="org-type">let</span> f := <span class="org-coq-symbol-binder">&#955;</span> <span class="org-variable-name">x y</span>, x + y.
 </pre>
 </div>
 </div>
@@ -1012,7 +1012,7 @@ let f := &#955; x y, x + y.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Platypus</p>
-<p class="date">Created: 2016-02-22 Mon 16:21</p>
+<p class="date">Created: 2016-02-23 Tue 09:57</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.3.1 (<a href="http://orgmode.org">Org</a> mode 8.2.4)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
