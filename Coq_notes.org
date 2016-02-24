@@ -8,39 +8,9 @@
 #+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.js"></script>
 #+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
 
-* Computation
-** Eval
-*** Compute
-*** cbv
-*** cbn (8.5)
-** Simpl
-** Reflexivity
-   Reflexivity does more than simpl, it notably tries to unfold definitions.
-
-   
-* Intro patterns
-** With square brackets
-   Conjunction: just a list with no separators
-   Ex: ~[H1 [H2 H3]]~ or ~(H1 & H2 & H3)~
-   Disjunction: ~|~
-   Ex: ~[H1 | H2]~
-** Tricks
-   <- or -> to rewrite directly an equality.
-   _ clear the hypothesis directly
-   ? to let coq choose the name
-
-
-* Notations
-** Precedence levels
-   Go from 0 (tightest) to 100, with an additionnal special 200.
-** Associativity
-   No associativity
-   Left associativity
-   Right associativity
-
-
-* The Case tactic
-  From Software Foundation, used to keep track of the ongoing case
+* Useful user-defined tactics
+** The Case tactic
+  Taken from Pierce's Software Foundation, it can be used to document a proof by annotating the proof context with the ongoing case.
 
 #+BEGIN_SRC coq
   Require String. Open Scope string_scope.
@@ -72,231 +42,15 @@
 #+END_SRC
 
 
-* Arguments
-** Implicit arguments
-  Implicit arguments are treated the same way as if provided as an _, but systematically.
-  We can declare them at define time by putting curly brackets around the argument.
-
-  #+BEGIN_SRC coq
-    Inductive list {A : Type} : Type :=
-     | nil : list
-     | cons : A -> list -> list.
-  #+END_SRC
-
-  Afterwards, through the Arguments directive: name and list of arguments, curly
-  brackets for the ones to be inferred.
-
-  Use an @ to disable implicit arguments locally.
-
-  #+BEGIN_SRC coq
-   Definition l : @list nat := ... .
-  #+END_SRC
-
-
-** Arguments renaming
-Arguments can be used to rename arguments using the rename flag (:rename. at the end of the command).
-(PW: explain? example?)
-
-
-* Generalize dependent versus generalize versus revert
-
-Starting from a goal
-#+BEGIN_SRC coq
-  a, b : A
-  EQ : a = b
-  ---------
-    b = a
-#+END_SRC
-
-One can use different tactics to move hypotheses from the context to the goal.
-
-#+BEGIN_SRC coq
-  revert EQ
-
-  a, b : A
-  ---------
-  a = b -> b = a
-
-#+END_SRC
-OR
-#+BEGIN_SRC coq
-  generalize EQ
-
-  a, b : A
-  EQ : a = b
-  ---------
-  a = b -> b = a
-#+END_SRC
-
-Notice that the generalized hypothesis is still present in the context, contrary to the reverted one.
-
-We can also generalize terms of type in Type.
-
-#+BEGIN_SRC coq
-  generalize a
-
-  a, b : A
-  EQ : a = b
-  ---------
-  forall a0: A, b = a0
-#+END_SRC
-
-Here we have lost some information, because the ~a~ in the context is no longer related to the new one.
-This situation is solved using generalize dependent.
-
-#+BEGIN_SRC coq
-  generalize dependent a
-
-  b : A
-  ---------
-  forall a : A, a = b -> b = a
-#+END_SRC
-
-
-* Duplicating an hypothesis
-** With remember
-#+BEGIN_SRC coq
-   Ltac dup H :=
-   let H' := fresh "H" in
-   remember H as H'; clear HeqH'.
-#+END_SRC
-
-** With generalize dependent
-#+BEGIN_SRC coq
-   Ltac dup H :=
-   let H' := fresh "H" in
-   generalize dependent H; intros H'.
-#+END_SRC
-   
-** With assert
-#+BEGIN_SRC coq
-Ltac dup H :=
-let n := fresh H in
-assert (n := H)
-#+END_SRC
-
-
-* Working with Ltac
-
-** Matching on hypotheses and conclusions
-*** Hypotheses
-Looking for an hypothesis of the form P x y, for any x and y.
-
-#+BEGIN_SRC coq
-  match goal with
-    H : P ?x ?y |- _ => destruct H; auto
-  end.
-#+END_SRC
-This will fail if no such hypothesis exists.
-You can add ~try~ in front of it.
-
-To match *all* such hypotheses, add ~repeat~.
-
-The following example shows how to use hypotheses matching to remove duplicates in hypotheses.
-
-#+BEGIN_SRC coq
-  Goal P x y -> P x y -> P x z -> P x z -> P x z -> P y z.
-  Proof.
-    intros.
-
-    repeat match goal with
-      H1 : P ?x ?y,
-          H2: P ?x ?y |- _ => clear H1
-    end.
-  Qed.
-#+END_SRC
-
-We try to match two hypotheses of the form ~P ?x ?y~. The pattern matching is
- strong enough to express that H1 and H2 must refer to the same x and y.
-H1 and H2 are guaranteed to be different though.
-
-It is also possible to match part of an hypothesis.
-Using ~context~:
-#+BEGIN_SRC coq
-match goal with
-  H : context [P ?x ?y] |- _ => (* do stuff *)
-end.
-#+END_SRC
-
-*** Conclusions
-
-The matching can also be made on the conlusion of the goal (after ~|-~):
-#+BEGIN_SRC coq
-match goal with
-  |- context [P ?x ?y] => (* do stuff *)
-end.
-#+END_SRC
-
-Of course, multiple patterns can be matched.
-#+BEGIN_SRC coq
-repeat match goal with
-  H : context [P ?x ?y] |- _ => (* do stuff *)
-| |- context [P ?x ?y] => (* do stuff *)
-end.
-#+END_SRC
-This will loop as long as either the hypotheses or the conclusion contain a term matching ~P ?x ?y~.
-Be sure to remove the matching hypotheses to enforce termination.
 
 
 
-** Generate fresh names
 
-Sometimes we need to generate fresh names inside tactics:
-#+BEGIN_SRC coq
-  let n := fresh in (* generate new name, probably H0, H1, H2 *)
-  intro n
-
-  let n := fresh H in (* generate new name, based on the name of H *)
-  intro n
-
-  let n := fresh "H" in (* generate new name, based on the given string "H" *)
-  intro n
-
-#+END_SRC
-
-** Print Ltac
-One can view the Ltac code of a tactic (when it's actually written in Ltac).
-#+BEGIN_SRC coq
-  Print Ltac inv.
-
-  --->
-  Ltac inv H := inversion H; clear H; subst
-#+END_SRC
-
-** Working with PG
-
-One can add custom keybindings to Emacs / PG.
-For example, to see the Ltac code of a tactic (see previous section), we can define the following Emacs lisp code in the appropriate file (~/.emacs= in my case)
-
-#+BEGIN_SRC elisp
-
-(defun coq-Print-Ltac (withprintingall)
-  "Ask for a tactic and Print Ltac it."
-  (interactive "P")
-  (if withprintingall
-      (coq-ask-do-show-all "Print Ltac" "Print Ltac")
-    (coq-ask-do "Print Ltac" "Print Ltac")))
-
-(global-set-key (kbd "C-c C-$") 'coq-Print-Ltac)
-
-#+END_SRC
-
-(PW: I should investigate what occurences of "Print Ltac" stand for what)
-
-
-* Show the axioms used for a given lemma
-
-To show what axioms a given lemma depends on, one can use the following vernacular command
-
-#+BEGIN_SRC coq
-Print Assumptions my_lemma.
-#+END_SRC
-
-
-* Using tactics like reflexivity over user built relations
+* Automatization facilities
+** Using tactics like reflexivity over user built relations
   The goal here is to be able to use coq's built-in tactics over other relations
   than iff and eq, in particular relations that you have defined yourself.
-** Adding equivalence relations, preorder, etc...
+*** Adding equivalence relations, preorder, etc...
 
    The inner mechanism going on when using tactics like reflexivity,
    transitivity or symmetry is typeclasses. However coq allows a particular
@@ -388,7 +142,7 @@ Print Assumptions my_lemma.
     Equivalence_Transitive := PEq_trans.
    #+END_SRC
 
-** Adding morphisms
+*** Adding morphisms
 
    The other typical case in which you might want to extend built-in tactics is
    the one of morphisms for which we would like to be able to use
@@ -454,6 +208,326 @@ Print Assumptions my_lemma.
    #+END_SRC
 
 
+** Using hint databases
+*** Hint databases from the standard library
+The auto (or its existential variant) tactics tries by default to solve a goal by
+exploring proofs trees, up to a fixed depth, that could be built using
+a fixed set of rules.
+These rules are defined in a so-called database, named core,
+essentially trying to unfold a few arithmetic and boolean functions
+from the standard library, and trying to apply a few lemmas and
+constructor over the elementary logical connectives. Its detail can be
+printed through the command:
+#+BEGIN_SRC coq
+Print HintDb core.
+#+END_SRC 
+
+However, the auto tactics can be prompted to use another hint
+database. Are predefined the following, whose detail can be printed as
+seen previously: arith, zarith, bool, datatypes, sets and
+typeclass_instances. Note that the last one is automatically enriched when
+registering new instances for a typeclass, and used during resolution.
+The syntax to use a specific database is the following:
+#+BEGIN_SRC coq
+auto with db1 ... db2.
+#+END_SRC
+*** User-defined databases
+One can also define its own databases, for instance to reduce a user
+defined expression to its normal-form via rewriting lemmas. 
+Its creation is done through the Create HintDb command:
+#+BEGIN_SRC coq
+Create HintDb my_lovely_db. 
+#+END_SRC
+The user can then enrich the database by adding hints to it. A hint is
+a lemma (actually more generally a term) and a way to use it:
+- by applying it (adds "simple apply term" to the db): keyword Resolve
+- by succeeding applying it (adds "simple apply term; trivial" to the
+  db): keyword Immediate
+- by adding constructors of a type as Resolve hints: keyword
+  Constructors
+- by allowing auto to unfold a definition: keyword Unfold
+- by applying any tactic: keyword Extern. 
+
+For instance:
+#+BEGIN_SRC coq
+Hint Resolve lemma1 lemma2: my_lovely_db.
+#+END_SRC
+
+For more details: https://coq.inria.fr/refman/Reference-Manual010.html#sec395
+
+** Computation
+*** Compute
+*** cbv
+*** cbn 
+*** Simpl
+*** NoteReflexivity
+   Reflexivity does more than simpl, it notably tries to unfold definitions.
+
+   
+* Notations
+** Useful notations from the standard library
+  Importing the utf8 standard library defines a few convenient utf8-based notations. In particular an elegant way to define anonymous functions:
+#+BEGIN_SRC coq
+Require Import Utf8.
+
+let f := λ x y, x + y.
+#+END_SRC 
+
+** Precedence levels
+   Go from 0 (tightest) to 100, with an additionnal special 200.
+** Associativity
+   No associativity
+   Left associativity
+   Right associativity
+
+   
+
+
+* Working with Ltac
+
+** Matching on hypotheses and conclusions
+*** Hypotheses
+Looking for an hypothesis of the form P x y, for any x and y.
+
+#+BEGIN_SRC coq
+  match goal with
+    H : P ?x ?y |- _ => destruct H; auto
+  end.
+#+END_SRC
+This will fail if no such hypothesis exists.
+You can add ~try~ in front of it.
+
+To match *all* such hypotheses, add ~repeat~.
+
+The following example shows how to use hypotheses matching to remove duplicates in hypotheses.
+
+#+BEGIN_SRC coq
+  Goal P x y -> P x y -> P x z -> P x z -> P x z -> P y z.
+  Proof.
+    intros.
+
+    repeat match goal with
+      H1 : P ?x ?y,
+          H2: P ?x ?y |- _ => clear H1
+    end.
+  Qed.
+#+END_SRC
+
+We try to match two hypotheses of the form ~P ?x ?y~. The pattern matching is
+ strong enough to express that H1 and H2 must refer to the same x and y.
+H1 and H2 are guaranteed to be different though.
+
+It is also possible to match part of an hypothesis.
+Using ~context~:
+#+BEGIN_SRC coq
+match goal with
+  H : context [P ?x ?y] |- _ => (* do stuff *)
+end.
+#+END_SRC
+
+*** Conclusions
+
+The matching can also be made on the conlusion of the goal (after ~|-~):
+#+BEGIN_SRC coq
+match goal with
+  |- context [P ?x ?y] => (* do stuff *)
+end.
+#+END_SRC
+
+Of course, multiple patterns can be matched.
+#+BEGIN_SRC coq
+repeat match goal with
+  H : context [P ?x ?y] |- _ => (* do stuff *)
+| |- context [P ?x ?y] => (* do stuff *)
+end.
+#+END_SRC
+This will loop as long as either the hypotheses or the conclusion contain a term matching ~P ?x ?y~.
+Be sure to remove the matching hypotheses to enforce termination.
+
+
+** Generate fresh names
+
+Sometimes we need to generate fresh names inside tactics:
+#+BEGIN_SRC coq
+  let n := fresh in (* generate new name, probably H0, H1, H2 *)
+  intro n
+
+  let n := fresh H in (* generate new name, based on the name of H *)
+  intro n
+
+  let n := fresh "H" in (* generate new name, based on the given string "H" *)
+  intro n
+
+#+END_SRC
+
+** Print Ltac
+One can view the Ltac code of a tactic (when it's actually written in Ltac).
+#+BEGIN_SRC coq
+  Print Ltac inv.
+
+  --->
+  Ltac inv H := inversion H; clear H; subst
+#+END_SRC
+
+** Working with PG
+
+One can add custom keybindings to Emacs / PG.
+For example, to see the Ltac code of a tactic (see previous section), we can define the following Emacs lisp code in the appropriate file (~/.emacs= in my case)
+
+#+BEGIN_SRC elisp
+
+(defun coq-Print-Ltac (withprintingall)
+  "Ask for a tactic and Print Ltac it."
+  (interactive "P")
+  (if withprintingall
+      (coq-ask-do-show-all "Print Ltac" "Print Ltac")
+    (coq-ask-do "Print Ltac" "Print Ltac")))
+
+(global-set-key (kbd "C-c C-$") 'coq-Print-Ltac)
+
+#+END_SRC
+
+(PW: I should investigate what occurences of "Print Ltac" stand for what)
+
+
+* Miscellaneous useful tricks
+** Keeping track of the ongoing case
+   If proceeding by induction or case studies over an inductive case,
+   say a semantic judgment, it can be hard to spot which case we end
+   up in. A useful hack is to keep track of a discriminating
+   parameter. Assuming for example that we are about to inverse a
+   judgment such as (i, σ) → (i', σ'), simply use the following
+   tactics beforehand:
+   #+BEGIN_SRC coq
+   set (ii := i)
+   #+END_SRC
+
+** Duplicating an hypothesis
+*** With remember
+#+BEGIN_SRC coq
+   Ltac dup H :=
+   let H' := fresh "H" in
+   remember H as H'; clear HeqH'.
+#+END_SRC
+
+*** With generalize dependent
+#+BEGIN_SRC coq
+   Ltac dup H :=
+   let H' := fresh "H" in
+   generalize dependent H; intros H'.
+#+END_SRC
+   
+*** With assert
+#+BEGIN_SRC coq
+Ltac dup H :=
+let n := fresh H in
+assert (n := H)
+#+END_SRC
+
+** Show the axioms used for a given lemma
+
+To show what axioms a given lemma depends on, one can use the following vernacular command
+
+#+BEGIN_SRC coq
+Print Assumptions my_lemma.
+#+END_SRC
+
+
+
+* Arguments
+** Implicit arguments
+  Implicit arguments are treated the same way as if provided as an _, but systematically.
+  We can declare them at define time by putting curly brackets around the argument.
+
+  #+BEGIN_SRC coq
+    Inductive list {A : Type} : Type :=
+     | nil : list
+     | cons : A -> list -> list.
+  #+END_SRC
+
+  Afterwards, through the Arguments directive: name and list of arguments, curly
+  brackets for the ones to be inferred.
+
+  Use an @ to disable implicit arguments locally.
+
+  #+BEGIN_SRC coq
+   Definition l : @list nat := ... .
+  #+END_SRC
+
+
+** Arguments renaming
+Arguments can be used to rename arguments using the rename flag (:rename. at the end of the command).
+(PW: explain? example?)
+
+
+* Generalize dependent versus generalize versus revert
+
+Starting from a goal
+#+BEGIN_SRC coq
+  a, b : A
+  EQ : a = b
+  ---------
+    b = a
+#+END_SRC
+
+One can use different tactics to move hypotheses from the context to the goal.
+
+#+BEGIN_SRC coq
+  revert EQ
+
+  a, b : A
+  ---------
+  a = b -> b = a
+
+#+END_SRC
+OR
+#+BEGIN_SRC coq
+  generalize EQ
+
+  a, b : A
+  EQ : a = b
+  ---------
+  a = b -> b = a
+#+END_SRC
+
+Notice that the generalized hypothesis is still present in the context, contrary to the reverted one.
+
+We can also generalize terms of type in Type.
+
+#+BEGIN_SRC coq
+  generalize a
+
+  a, b : A
+  EQ : a = b
+  ---------
+  forall a0: A, b = a0
+#+END_SRC
+
+Here we have lost some information, because the ~a~ in the context is no longer related to the new one.
+This situation is solved using generalize dependent.
+
+#+BEGIN_SRC coq
+  generalize dependent a
+
+  b : A
+  ---------
+  forall a : A, a = b -> b = a
+#+END_SRC
+
+
+* Intro patterns
+** With square brackets
+   Conjunction: just a list with no separators
+   Ex: ~[H1 [H2 H3]]~ or ~(H1 & H2 & H3)~
+   Disjunction: ~|~
+   Ex: ~[H1 | H2]~
+** Tricks
+   <- or -> to rewrite directly an equality.
+   _ clear the hypothesis directly
+   ? to let coq choose the name
+   
+
+
 * Pattern matching. Unify with intro patterns and talk about the let, let with the backstick
 ** A particular case of pattern matching, the let-binding
   Coq does not allow pattern matching over arguments of a function, as opposed to OCaml, even if the inductive type of this constructor admits a unique constructor. One can avoid an arguably heavy match using the let-binding construct:
@@ -509,10 +583,4 @@ all: auto.
 
 
 
-* Notations from the standard library
-  Importing the utf8 standard library defines a few convenient utf8-based notations. In particular an elegant way to define anonymous functions:
-#+BEGIN_SRC coq
-Require Import Utf8.
-
-let f := λ x y, x + y.
-#+END_SRC 
+* TODO : PG, companycoq, useful commands
