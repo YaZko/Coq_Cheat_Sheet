@@ -581,6 +581,41 @@ n: tac.
 all: auto.
 #+END_SRC
 
+* Emacs extensions: Proof-General and Company-coq
 
+** Proof-General
+Proof-General is an Emacs interface for proof assistants such as Coq. The latest version is available on [[https://github.com/ProofGeneral/PG][GitHub]].
+
+** Company-coq
+Company-coq is an extension for Proof-General's Coq mode. It is available through [[http://melpa.org/#/getting-started][MELPA]]. One of its most interesting feature is prettification.
+For example, adding the following bits of code into your `~/.emacs` will visually replace all ~alpha~ with an ~α~.
+#+BEGIN_SRC elisp
+(add-hook 'coq-mode-hook #'company-coq-initialize)
+(add-hook 'coq-mode-hook
+          (lambda ()
+            (set (make-local-variable 'prettify-symbols-alist)
+                 '(("Admitted." . ?😱) ("admit." . ?😱)
+  ("Alpha" . ?Α) ("Beta" . ?Β) ("Gamma" . ?Γ)
+  ("Delta" . ?Δ) ("Epsilon" . ?Ε) ("Zeta" . ?Ζ)
+  ("Eta" . ?Η) ("Theta" . ?Θ) ("Iota" . ?Ι)
+  ("Kappa" . ?Κ) ("Lambda" . ?Λ) ("Mu" . ?Μ)
+  ("Nu" . ?Ν) ("Xi" . ?Ξ) ("Omicron" . ?Ο)
+  ("Pi" . ?Π) ("Rho" . ?Ρ) ("Sigma" . ?Σ)
+  ("Tau" . ?Τ) ("Upsilon" . ?Υ) ("Phi" . ?Φ)
+  ("Chi" . ?Χ) ("Psi" . ?Ψ) ("Omega" . ?Ω)
+  ("alpha" . ?α) ("beta" . ?β) ("gamma" . ?γ)
+  ("delta" . ?δ) ("epsilon" . ?ε) ("zeta" . ?ζ)
+  ("eta" . ?η) ("theta" . ?θ) ("iota" . ?ι)
+  ("kappa" . ?κ) ("lambda" . ?λ) ("mu" . ?μ)
+  ("nu" . ?ν) ("xi" . ?ξ) ("omicron" . ?ο)
+  ("pi" . ?π) ("rho" . ?ρ) ("sigma" . ?σ)
+  ("tau" . ?τ) ("upsilon" . ?υ) ("phi" . ?φ)
+  ("chi" . ?χ) ("psi" . ?ψ) ("omega" . ?ω)
+  ))))
+#+END_SRC
+You will however need to use a font that can handle unicode. For example on OS X, you may need to add the following code into your `~/.emacs`:
+#+BEGIN_SRC elisp
+(set-fontset-font t 'unicode (font-spec :name "Apple Color Emoji") nil 'append)
+#+END_SRC
 
 * TODO : PG, companycoq, useful commands
