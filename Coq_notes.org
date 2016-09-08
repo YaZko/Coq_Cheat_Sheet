@@ -8,8 +8,7 @@
 #+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/lib/js/jquery.stickytableheaders.js"></script>
 #+HTML_HEAD: <script type="text/javascript" src="http://www.pirilampo.org/styles/readtheorg/js/readtheorg.js"></script>
 
-* Useful user-defined tactics
-** The Case tactic
+* Useful user-defined tactics** The Case tactic
   Taken from Pierce's Software Foundation, it can be used to document a proof by annotating the proof context with the ongoing case.
 
 #+BEGIN_SRC coq
@@ -41,12 +40,29 @@
   Tactic Notation "SSSSSSSCase" constr(name) := Case_aux SSSSSSSCase name.
 #+END_SRC
 
+I often need to perform case analysis on the discriminee of a match
+construct. To do so, use the following tactic:
+
+#+BEGIN_SRC coq
+Ltac destr :=
+  match goal with
+   |- context [ match ?e with _ => _ end ] => destruct e eqn:?
+  end.
+#+END_SRC
+
+From this you can build your own variant of the tactic that runs arbitrary
+tactics after destructing, for instance simplifying or trying to eliminate simpl
+goals. My variant simplifies in the whole context and tries to solve goals using
+intuition congruence.
+
+#+BEGIN_SRC coq
+Ltac destr' := repeat destr; simpl in *; try intuition congruence.
+#+END_SRC 
 
 
 
 
-
-* Automatization facilities
+* Automation facilities
 ** Using tactics like reflexivity over user built relations
   The goal here is to be able to use coq's built-in tactics over other relations
   than iff and eq, in particular relations that you have defined yourself.
